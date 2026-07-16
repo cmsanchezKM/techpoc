@@ -1,26 +1,42 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection } from '@angular/core';
+import {
+  ApplicationConfig,
+  provideBrowserGlobalErrorListeners,
+  provideZonelessChangeDetection,
+} from '@angular/core';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
-import { provideTranslateService } from '@ngx-translate/core';
-import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+import { provideTransloco, TranslocoLoader } from '@jsverse/transloco';
+import { HttpClient } from '@angular/common/http';
+import { inject } from '@angular/core';
 
 import { routes } from './app.routes';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './core/interceptors/auth-interceptor';
 
+export class TranslocoHttpLoader implements TranslocoLoader {
+  private http = inject(HttpClient);
+
+  getTranslation(lang: string) {
+    return this.http.get<Record<string, string>>(`/i18n/${lang}.json`);
+  }
+}
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZonelessChangeDetection(),
-    provideBrowserGlobalErrorListeners(), 
+    provideBrowserGlobalErrorListeners(),
     provideClientHydration(withEventReplay()),
     provideRouter(routes, withComponentInputBinding()),
     provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
-    // ngx-translate v18: standalone providers, no TranslateModule.
-    // Translation JSON files live in /public/i18n (served at /i18n/<lang>.json).
-    provideTranslateService({
-      lang: 'es',
-      fallbackLang: 'es',
-      loader: provideTranslateHttpLoader({ prefix: '/i18n/', suffix: '.json' }),
+    // Transloco configuration
+    provideTransloco({
+      config: {
+        defaultLang: 'es',
+        fallbackLang: 'es',
+        availableLangs: ['es', 'en'],
+        prodMode: true,
+      },
+      loader: TranslocoHttpLoader,
     }),
   ],
 };
