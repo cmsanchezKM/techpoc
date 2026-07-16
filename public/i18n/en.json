@@ -1,0 +1,17 @@
+{
+  "posts": {
+    "list": {
+      "title": "Tech Blog",
+      "search": "Search",
+      "placeholder": "Search posts...",
+      "authors": "Authors",
+      "tags": "Tags",
+      "loading": "Loading posts...",
+      "error": "There was an error loading the posts.",
+      "noResults": "No posts found matching the filters.",
+      "readMore": "Read more",
+      "by": "By",
+      "empty": "No posts available."
+    }
+  }
+}

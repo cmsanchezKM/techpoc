@@ -3,7 +3,7 @@ import { Routes } from '@angular/router';
 export const POSTS_ROUTES: Routes = [
   {
     path: '',
-    loadComponent: () => import('./list/post-list.component').then((m) => m.PostList),
+    loadComponent: () => import('./list/post-list').then((m) => m.PostList),
     title: 'Lista de posts · TechPoC',
   },
   {

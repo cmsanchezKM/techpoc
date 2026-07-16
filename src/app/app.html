@@ -1,0 +1,13 @@
+<header class="app-header">
+  <nav class="nav-container">
+    <div class="logo" routerLink="/">Blog Tech</div>
+    <div class="nav-actions">
+      <button (click)="changeLang('es')">ES</button>
+      <button (click)="changeLang('en')">EN</button>
+    </div>
+  </nav>
+</header>
+
+<main class="content-container">
+  <router-outlet></router-outlet>
+</main>

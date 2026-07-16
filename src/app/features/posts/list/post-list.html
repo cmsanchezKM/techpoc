@@ -1,0 +1,94 @@
+<div class="posts-container" *transloco="let t; read: 'posts.list'">
+  <aside class="filters-sidebar">
+    <section class="search-section">
+      <h3>{{ t('search') }}</h3>
+      <input
+        type="text"
+        [value]="postsService.searchTerm()"
+        (input)="onSearch()"
+        [placeholder]="t('placeholder')"
+        class="search-input"
+      />
+    </section>
+
+    <section class="filter-section">
+      <h3>{{ t('authors') }}</h3>
+      <div class="filter-list">
+        @for (authorId of postsService.uniqueAuthors(); track authorId) {
+          <label class="filter-item">
+            <input
+              type="checkbox"
+              [checked]="postsService.selectedAuthors().includes(authorId)"
+              (change)="postsService.toggleAuthor(authorId)"
+            />
+            <span>{{ postsService.getUserName(authorId) }}</span>
+          </label>
+        }
+      </div>
+    </section>
+
+    <section class="filter-section">
+      <h3>{{ t('tags') }}</h3>
+      <div class="filter-list">
+        @for (tag of postsService.uniqueTags(); track tag) {
+          <label class="filter-item">
+            <input
+              type="checkbox"
+              [checked]="postsService.selectedTags().includes(tag)"
+              (change)="postsService.toggleTag(tag)"
+            />
+            <span>{{ tag }}</span>
+          </label>
+        }
+      </div>
+    </section>
+  </aside>
+
+  <main class="posts-main">
+    <header class="list-header">
+      <h1>{{ t('title') }}</h1>
+    </header>
+
+    @if (postsService.isLoading()) {
+      <div class="loading">{{ t('loading') }}</div>
+    } @else if (postsService.error()) {
+      <div class="error">{{ t('error') }}</div>
+    } @else {
+      <div class="posts-grid">
+        @for (post of postsService.paginatedPosts(); track post.id) {
+          <article class="post-card" (click)="viewDetail(post.id)">
+            <h2>{{ post.title }}</h2>
+            <p>{{ post.body.substring(0, 100) }}...</p>
+            <div class="post-meta">
+              <div class="author-info">
+                <span class="author"
+                  >{{ t('by') }} {{ postsService.getUserName(post.userId) }}</span
+                >
+              </div>
+              <div class="tags">
+                @for (tag of post.tags; track tag) {
+                  <span class="tag">{{ tag }}</span>
+                }
+              </div>
+            </div>
+          </article>
+        } @empty {
+          <div class="no-results">{{ t('noResults') }}</div>
+        }
+      </div>
+
+      @if (postsService.totalPages() > 1) {
+        <nav class="pagination">
+          @for (page of [].constructor(postsService.totalPages()); track $index) {
+            <button
+              [class.active]="postsService.currentPage() === $index + 1"
+              (click)="postsService.goToPage($index + 1)"
+            >
+              {{ $index + 1 }}
+            </button>
+          }
+        </nav>
+      }
+    }
+  </main>
+</div>
