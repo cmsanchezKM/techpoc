@@ -1,5 +1,5 @@
 import { httpResource } from '@angular/common/http';
-import { computed, Injectable, signal } from '@angular/core';
+import { computed, Injectable, signal, Signal } from '@angular/core';
 import { Post } from '../../core/models/post.model';
 import { User } from '../../core/models/user.model';
 
@@ -16,8 +16,8 @@ export class PostsApi {
   private readonly postsResource = httpResource<Post[]>(() => `${API_BASE}/posts`);
   private readonly usersResource = httpResource<User[]>(() => `${API_BASE}/users`);
 
-  readonly allPosts = computed(() => this.postsResource.value() ?? []);
-  readonly allUsers = computed(() => this.usersResource.value() ?? []);
+  readonly allPosts: Signal<Post[]> = computed(() => this.postsResource.value() ?? []);
+  readonly allUsers: Signal<User[]> = computed(() => this.usersResource.value() ?? []);
 
   private readonly userMap = computed(() => {
     const map = new Map<number, string>();
