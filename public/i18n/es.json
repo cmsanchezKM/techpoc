@@ -1,0 +1,17 @@
+{
+  "posts": {
+    "list": {
+      "title": "Blog Tecnológico",
+      "search": "Buscar",
+      "placeholder": "Buscar posts...",
+      "authors": "Autores",
+      "tags": "Etiquetas",
+      "loading": "Cargando posts...",
+      "error": "Hubo un error al cargar los posts.",
+      "noResults": "No se encontraron posts que coincidan con los filtros.",
+      "readMore": "Leer más",
+      "by": "Por",
+      "empty": "No hay posts disponibles."
+    }
+  }
+}

@@ -1,25 +1,30 @@
-import { Injectable, inject } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { Injectable, inject, signal } from '@angular/core';
+import { TranslocoService } from '@jsverse/transloco';
 
 export type Lang = 'es' | 'en';
 const STORAGE_KEY = 'techpoc.lang';
 
 @Injectable({ providedIn: 'root' })
 export class LanguageService {
-  private translate = inject(TranslateService);
+  private transloco = inject(TranslocoService);
+  private currentLangSignal = signal<Lang>('es');
 
-  readonly current = this.translate.currentLang;
-  readonly isLoading = this.translate.isLoading;
+  readonly current = this.currentLangSignal.asReadonly();
 
   constructor() {
     const saved = (localStorage.getItem(STORAGE_KEY) as Lang | null) ?? 'es';
+    this.currentLangSignal.set(saved);
     if (saved !== 'es') {
-      this.use(saved);
+      this.transloco.setActiveLang(saved);
+    } else {
+      this.transloco.setActiveLang('es');
     }
   }
 
   use(lang: Lang) {
-    this.translate.use(lang).subscribe(() => localStorage.setItem(STORAGE_KEY, lang));
+    this.transloco.setActiveLang(lang);
+    this.currentLangSignal.set(lang);
+    localStorage.setItem(STORAGE_KEY, lang);
   }
 
   toggle() {

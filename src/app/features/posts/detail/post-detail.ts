@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-post-detail',
   imports: [],
-  templateUrl: './post-detail.component.html',
-  styleUrl: './post-detail.component.css',
+  templateUrl: './post-detail.html',
+  styleUrl: './post-detail.css',
 })
 export class PostDetail {}

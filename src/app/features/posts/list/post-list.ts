@@ -1,0 +1,26 @@
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { PostsApi } from '../post-api';
+import { TranslocoDirective } from '@jsverse/transloco';
+import { CardComponent, PaginationComponent } from '../../../shared';
+
+@Component({
+  selector: 'app-post-list',
+  imports: [TranslocoDirective, CardComponent, PaginationComponent],
+  templateUrl: './post-list.html',
+  styleUrl: './post-list.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class PostList {
+  protected readonly postsService = inject(PostsApi);
+  private readonly router = inject(Router);
+
+  onSearch(event: Event): void {
+    const value = (event.target as HTMLInputElement).value;
+    this.postsService.searchTerm.set(value);
+  }
+
+  viewDetail(id: number): void {
+    this.router.navigate(['/posts', id]);
+  }
+}

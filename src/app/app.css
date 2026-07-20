@@ -1,0 +1,47 @@
+:host {
+  background: var(--color-bg);
+}
+
+.app-header {
+  background: #333;
+  color: white;
+  padding: 1rem 2rem;
+}
+
+.nav-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.nav-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.nav-actions button {
+  background: transparent;
+  border: 1px solid white;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.nav-actions button:hover {
+  background: white;
+  color: #333;
+}
+
+.content-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}

@@ -1,0 +1,41 @@
+<section
+  class="w-full max-w-sm lg:max-w-6xl mx-auto py-4 py-8"
+  *transloco="let t; prefix: 'posts.list'"
+>
+  <header class="list-header">
+    <h1>{{ t('title') }}</h1>
+  </header>
+  <aside class="filters-sidebar"></aside>
+
+  <article class="flex flex-col">
+    @if (postsService.isLoading()) {
+      <div class="text-center p-12 text-lg color-brand-primary">{{ t('loading') }}</div>
+    } @else if (postsService.error()) {
+      <div class="text-center p-12 text-lg color-brand-primary">{{ t('error') }}</div>
+    } @else {
+      <div class="flex flex-col gap-8">
+        @for (post of postsService.paginatedPosts(); track post.id; let isOdd = $odd) {
+          <app-card
+            (click)="viewDetail(post.id)"
+            [styles]="isOdd ? 'bg-brand-surface' : 'bg-brand-surface-variant'"
+            [date]="post.createdAt"
+            [title]="post.title"
+            [description]="post.body"
+            [author]="postsService.getUserName(post.userId)"
+            [tags]="post.tags"
+          >
+          </app-card>
+        } @empty {
+          <div class="text-center p-12 text-lg color-brand-primary">{{ t('noResults') }}</div>
+        }
+      </div>
+
+      <app-pagination
+        [page]="postsService.currentPage()"
+        [total]="postsService.totalPages()"
+        [maxVisible]="3"
+        (pageChange)="postsService.goToPage($event)"
+      ></app-pagination>
+    }
+  </article>
+</section>
