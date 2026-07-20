@@ -1,3 +1,7 @@
+:host {
+  background: var(--color-bg);
+}
+
 .app-header {
   background: #333;
   color: white;
