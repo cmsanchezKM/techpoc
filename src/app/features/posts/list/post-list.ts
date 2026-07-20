@@ -2,10 +2,11 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { PostsApi } from '../post-api';
 import { TranslocoDirective } from '@jsverse/transloco';
+import { CardComponent, PaginationComponent } from '../../../shared';
 
 @Component({
   selector: 'app-post-list',
-  imports: [TranslocoDirective],
+  imports: [TranslocoDirective, CardComponent, PaginationComponent],
   templateUrl: './post-list.html',
   styleUrl: './post-list.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
