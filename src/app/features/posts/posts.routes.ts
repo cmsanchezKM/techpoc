@@ -8,17 +8,17 @@ export const POSTS_ROUTES: Routes = [
   },
   {
     path: 'new',
-    loadComponent: () => import('./form/post-form.component').then((m) => m.PostForm),
+    loadComponent: () => import('./form/post-form').then((m) => m.PostForm),
     title: 'Nuevo post · TechPoC',
   },
   {
     path: ':id/edit',
-    loadComponent: () => import('./form/post-form.component').then((m) => m.PostForm),
+    loadComponent: () => import('./form/post-form').then((m) => m.PostForm),
     title: 'Editar post · TechPoC',
   },
   {
     path: ':id',
-    loadComponent: () => import('./detail/post-detail.component').then((m) => m.PostDetail),
+    loadComponent: () => import('./detail/post-detail').then((m) => m.PostDetail),
     title: 'Post · TechPoC',
   },
 ];
