@@ -8,7 +8,6 @@ import { CardComponent, PaginationComponent } from '../../../shared';
   selector: 'app-post-list',
   imports: [TranslocoDirective, CardComponent, PaginationComponent],
   templateUrl: './post-list.html',
-  styleUrl: './post-list.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PostList {
