@@ -125,3 +125,5 @@ Screaming Architecture: the folder structure reflects the business domain, not t
 - Examples: feature guides, architecture, configuration, troubleshooting, etc.
 - Exceptions: `README.md` at the root (already exists), `AGENTS.md` (definitions), `CLAUDE.md` (configuration).
 - Keep the `/doc` folder clean and organized as the project's centralized reference.
+
+- Responde el chat siempre en español
