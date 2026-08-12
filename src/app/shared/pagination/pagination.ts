@@ -1,39 +1,45 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { TranslocoPipe } from '@jsverse/transloco';
+import { IconComponent } from '../icons/icon.component';
 
 @Component({
   selector: 'app-pagination',
-  imports: [CommonModule],
+  imports: [CommonModule, TranslocoPipe, IconComponent],
   template: `
     <nav
       class="flex items-center justify-between gap-2 px-4 py-3"
-      [attr.aria-label]="'Navegación de páginas'"
+      [attr.aria-label]="'pagination.pageNavigation' | transloco"
       role="navigation"
     >
       <!-- Botón Previous -->
       <button
         (click)="onPreviousClick()"
         [disabled]="currentPage() === 1"
-        [attr.aria-label]="'Ir a página anterior'"
+        [attr.aria-label]="'pagination.previousPageLabel' | transloco"
         class="inline-flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium
                transition-colors duration-200
                disabled:cursor-not-allowed disabled:text-gray-400 disabled:hover:bg-transparent
                hover:bg-gray-100 active:bg-gray-200
                focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
       >
-        <span aria-hidden="true">←</span>
-        <span>{{ 'Anterior' }}</span>
+        <app-icon name="arrow-left" />
+        <span>{{ 'pagination.previous' | transloco }}</span>
       </button>
 
       <!-- Números de página -->
-      <div class="flex items-center gap-1" role="group" [attr.aria-label]="'Números de página'">
+      <div
+        class="flex items-center gap-1"
+        role="group"
+        [attr.aria-label]="'pagination.pageNumbers' | transloco"
+      >
         @for (page of visiblePages(); track page) {
           @if (page === 'ellipsis') {
             <span class="px-2 py-2 text-sm text-gray-500" aria-hidden="true"> ... </span>
           } @else {
             <button
               (click)="onPageClick(page)"
-              [attr.aria-label]="'Ir a página ' + page"
+              [attr.aria-label]="('pagination.goToPage' | transloco) + ' ' + page"
               [attr.aria-current]="currentPage() === page ? 'page' : undefined"
               class="inline-flex h-9 w-9 items-center justify-center rounded-md text-sm font-medium
                      transition-colors duration-200
@@ -54,15 +60,15 @@ import { ChangeDetectionStrategy, Component, computed, input, output } from '@an
       <button
         (click)="onNextClick()"
         [disabled]="currentPage() === totalPages()"
-        [attr.aria-label]="'Ir a página siguiente'"
+        [attr.aria-label]="'pagination.nextPageLabel' | transloco"
         class="inline-flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium
                transition-colors duration-200
                disabled:cursor-not-allowed disabled:text-gray-400 disabled:hover:bg-transparent
                hover:bg-gray-100 active:bg-gray-200
                focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
       >
-        <span>{{ 'Siguiente' }}</span>
-        <span aria-hidden="true">→</span>
+        <span>{{ 'pagination.next' | transloco }}</span>
+        <app-icon name="arrow-right" />
       </button>
     </nav>
   `,

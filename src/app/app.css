@@ -1,5 +1,6 @@
 :host {
   background: var(--color-bg);
+  font-family: var(--font-family-sans);
 }
 
 .app-header {

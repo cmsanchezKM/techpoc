@@ -1,7 +1,7 @@
 {
   "posts": {
     "list": {
-      "title": "Blog Tecnológico",
+      "title": "Lista de posts",
       "search": "Buscar",
       "placeholder": "Buscar posts...",
       "authors": "Autores",
@@ -9,9 +9,23 @@
       "loading": "Cargando posts...",
       "error": "Hubo un error al cargar los posts.",
       "noResults": "No se encontraron posts que coincidan con los filtros.",
+      "showingResults": "Mostrando {{current}} de {{total}} resultados",
       "readMore": "Leer más",
       "by": "Por",
-      "empty": "No hay posts disponibles."
+      "empty": "No hay posts disponibles.",
+      "filters": {
+        "allAuthors": "Todos los autores",
+        "allTags": "Todas las etiquetas"
+      }
     }
+  },
+  "pagination": {
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "pageNavigation": "Navegación de páginas",
+    "pageNumbers": "Números de página",
+    "goToPage": "Ir a página",
+    "previousPageLabel": "Ir a página anterior",
+    "nextPageLabel": "Ir a página siguiente"
   }
 }

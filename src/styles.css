@@ -1,5 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 @import 'tailwindcss';
 
 @theme {
@@ -15,4 +16,6 @@
   --color-brand-primary: #2a3439;
   --color-brand-secondary: #566166;
   --color-brand-tertiary: rgba(86, 97, 102, 0.6);
+
+  --font-family-sans: 'Inter', sans-serif;
 }

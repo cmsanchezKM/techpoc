@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { authGuard } from '../../core/guards/auth-guard';
 
 export const POSTS_ROUTES: Routes = [
   {
@@ -8,11 +9,13 @@ export const POSTS_ROUTES: Routes = [
   },
   {
     path: 'new',
+    canActivate: [authGuard],
     loadComponent: () => import('./form/post-form').then((m) => m.PostForm),
     title: 'Nuevo post · TechPoC',
   },
   {
     path: ':id/edit',
+    canActivate: [authGuard],
     loadComponent: () => import('./form/post-form').then((m) => m.PostForm),
     title: 'Editar post · TechPoC',
   },

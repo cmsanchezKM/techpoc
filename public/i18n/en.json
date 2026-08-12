@@ -1,7 +1,7 @@
 {
   "posts": {
     "list": {
-      "title": "Tech Blog",
+      "title": "Posts List",
       "search": "Search",
       "placeholder": "Search posts...",
       "authors": "Authors",
@@ -9,9 +9,23 @@
       "loading": "Loading posts...",
       "error": "There was an error loading the posts.",
       "noResults": "No posts found matching the filters.",
+      "showingResults": "Showing {{current}} of {{total}} results",
       "readMore": "Read more",
       "by": "By",
-      "empty": "No posts available."
+      "empty": "No posts available.",
+      "filters": {
+        "allAuthors": "All authors",
+        "allTags": "All tags"
+      }
     }
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "pageNavigation": "Page navigation",
+    "pageNumbers": "Page numbers",
+    "goToPage": "Go to page",
+    "previousPageLabel": "Go to previous page",
+    "nextPageLabel": "Go to next page"
   }
 }

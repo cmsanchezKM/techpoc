@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { authGuard } from './core/guards/auth-guard';
 
 export const routes: Routes = [
   {
@@ -9,7 +8,6 @@ export const routes: Routes = [
   },
   {
     path: 'posts',
-    canActivate: [authGuard],
     loadChildren: () => import('./features/posts/posts.routes').then((m) => m.POSTS_ROUTES),
   },
   { path: '', pathMatch: 'full', redirectTo: 'posts' },

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { Router } from '@angular/router';
 import { PostsApi } from '@features/posts/data-access/posts-api';
 import { TranslocoDirective } from '@jsverse/transloco';
-import { CardComponent, PaginationComponent } from '@shared';
+import { CardComponent, PaginationComponent, SelectComponent } from '@shared';
 import { CommonModule } from '@angular/common';
 import { PostFilters } from '@features/posts/data-access/post-filters';
 
@@ -10,7 +10,7 @@ const ITEMS_PER_PAGE = 6;
 
 @Component({
   selector: 'app-post-list',
-  imports: [CommonModule, TranslocoDirective, CardComponent, PaginationComponent],
+  imports: [CommonModule, TranslocoDirective, CardComponent, PaginationComponent, SelectComponent],
   templateUrl: './post-list.html',
   styleUrl: './post-list.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -48,6 +48,34 @@ export class PostList {
     });
   });
 
+  readonly authorOptions = computed(() => {
+    const allPosts = this.postsService.allPosts();
+
+    // Extraer autores únicos (Map previene duplicados por ID)
+    const uniqueAuthors = new Map(
+      allPosts
+        .filter((post) => post.author?.id && post.author.name)
+        .map((post) => [String(post.author!.id), post.author!.name]),
+    );
+
+    // Convertir a opciones ordenadas alfabéticamente por nombre
+    return Array.from(uniqueAuthors, ([value, label]) => ({ value, label })).sort((a, b) =>
+      a.label.localeCompare(b.label),
+    );
+  });
+
+  readonly tagOptions = computed(() => {
+    const allPosts = this.postsService.allPosts();
+
+    // Extraer todos los tags únicos de todos los posts
+    const uniqueTags = new Set(allPosts.flatMap((post) => post.tags ?? []));
+
+    // Convertir a opciones ordenadas alfabéticamente
+    return Array.from(uniqueTags)
+      .sort()
+      .map((tag) => ({ value: tag, label: tag }));
+  });
+
   /** Número total de páginas según los posts filtrados. */
   readonly totalPages = computed(() => Math.ceil(this.filteredPosts().length / ITEMS_PER_PAGE));
 
@@ -60,12 +88,12 @@ export class PostList {
     return posts.slice(start, end);
   });
 
-  onAuthorChange(value: string): void {
+  onAuthorChange(value: string | null): void {
     this.filterService.setSelectedAuthor(value || null);
     this.currentPage.set(1);
   }
 
-  onTagChange(value: string): void {
+  onTagChange(value: string | null): void {
     this.filterService.setSelectedTag(value || null);
     this.currentPage.set(1);
   }
