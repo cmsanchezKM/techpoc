@@ -12,12 +12,11 @@ import { Router } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { PostsApi } from '@features/posts/data-access/posts-api';
 import { AuthService } from '@features/auth/data-access/auth.service';
-import { IconComponent, TagBadgeComponent } from '@shared';
 import { PostComments } from '../comments/post-comments';
 
 @Component({
   selector: 'app-post-detail',
-  imports: [CommonModule, TranslocoDirective, IconComponent, TagBadgeComponent, PostComments],
+  imports: [CommonModule, TranslocoDirective, PostComments],
   templateUrl: './post-detail.html',
   styleUrl: './post-detail.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
