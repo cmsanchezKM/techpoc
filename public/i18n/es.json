@@ -17,7 +17,24 @@
         "allAuthors": "Todos los autores",
         "allTags": "Todas las etiquetas"
       }
+    },
+    "detail": {
+      "loading": "Cargando post...",
+      "error": "Hubo un error al cargar el post.",
+      "notFound": "Post no encontrado.",
+      "by": "Por",
+      "edit": "Editar",
+      "delete": "Eliminar"
     }
+  },
+  "comments": {
+    "title": "Comentarios",
+    "loading": "Cargando comentarios...",
+    "error": "Hubo un error al cargar los comentarios.",
+    "empty": "Todavía no hay comentarios.",
+    "placeholder": "Escribe un comentario...",
+    "submit": "Comentar",
+    "loginToComment": "Inicia sesión para comentar."
   },
   "pagination": {
     "previous": "Anterior",
