@@ -1,6 +1,6 @@
 <section class="mt-8" *transloco="let t; prefix: 'comments'">
-  <h2 class="text-lg font-semibold text-brand-primary">
-    {{ t('title') }} / {{ commentsApi.comments().length }}
+  <h2 class="text-brand-secondary text-xs font-bold uppercase tracking-widest">
+    {{ t('title') }} / {{ commentsApi.comments().length | number: '2.0-0' }}
   </h2>
 
   @if (commentsApi.isLoading()) {
@@ -10,13 +10,34 @@
   } @else {
     <ul class="mt-4 flex flex-col gap-4">
       @for (comment of commentsApi.comments(); track comment.id) {
-        <li class="rounded-lg bg-brand-surface p-4">
-          <div class="flex items-center justify-between gap-2">
+        @let dateInfo = getCommentDateInfo(comment.createdAt);
+        <li class="p-4">
+          <div class="flex items-center justify-start gap-2">
             <span class="text-sm font-semibold text-brand-primary">
               {{ comment.author?.name }}
             </span>
             <time [dateTime]="comment.createdAt" class="text-xs text-brand-tertiary">
-              {{ comment.createdAt | date: 'dd MMM yyyy, HH:mm' }}
+              @switch (dateInfo.type) {
+                @case ('seconds') {
+                  {{
+                    t(dateInfo.count === 1 ? 'secondAgo' : 'secondsAgo', { count: dateInfo.count })
+                  }}
+                }
+                @case ('minutes') {
+                  {{
+                    t(dateInfo.count === 1 ? 'minuteAgo' : 'minutesAgo', { count: dateInfo.count })
+                  }}
+                }
+                @case ('hours') {
+                  {{ t(dateInfo.count === 1 ? 'hourAgo' : 'hoursAgo', { count: dateInfo.count }) }}
+                }
+                @case ('yesterday') {
+                  {{ t('yesterday') }}
+                }
+                @default {
+                  <span class="uppercase">{{ comment.createdAt | date: 'dd MMM' }}</span>
+                }
+              }
             </time>
           </div>
           <p class="mt-2 text-sm leading-relaxed text-brand-secondary">{{ comment.body }}</p>

@@ -27,4 +27,6 @@ body {
   --color-brand-tertiary: rgba(86, 97, 102, 0.6);
 
   --font-family-sans: 'Inter', sans-serif;
+
+  --text-xxs: 0.625rem;
 }

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, effect, inject, input, signal } fro
 import { CommonModule } from '@angular/common';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { AuthService } from '@features/auth/data-access/auth.service';
+import { getRelativeDateInfo } from '@core/utils/date.utils';
 import { CommentsApi } from '../data-access/comments-api';
 
 @Component({
@@ -30,6 +31,8 @@ export class PostComments {
   onBodyChange(event: Event): void {
     this.newCommentBody.set((event.target as HTMLTextAreaElement).value);
   }
+
+  protected getCommentDateInfo = getRelativeDateInfo;
 
   async onSubmit(event: Event): Promise<void> {
     event.preventDefault();

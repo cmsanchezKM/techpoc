@@ -11,7 +11,7 @@
       <header class="flex items-start justify-between gap-4">
         <h1 class="text-3xl font-bold text-brand-title">{{ post.title }}</h1>
 
-        @if (!isOwner()) {
+        @if (isOwner()) {
           <div class="flex shrink-0 gap-2">
             <button
               type="button"
@@ -33,9 +33,11 @@
         }
       </header>
 
-      <p class="mt-6 whitespace-pre-line text-lg leading-relaxed text-brand-secondary">
+      <p class="m-6 whitespace-pre-line text-lg leading-relaxed text-brand-secondary">
         {{ post.body }}
       </p>
+
+      <hr class="my-6 border-brand-line" />
 
       @defer (on viewport) {
         <app-post-comments [postId]="post.id" />

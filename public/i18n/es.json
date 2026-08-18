@@ -34,7 +34,14 @@
     "empty": "Todavía no hay comentarios.",
     "placeholder": "Escribe un comentario...",
     "submit": "Comentar",
-    "loginToComment": "Inicia sesión para comentar."
+    "loginToComment": "Inicia sesión para comentar.",
+    "secondAgo": "hace {{count}} segundo",
+    "secondsAgo": "hace {{count}} segundos",
+    "minuteAgo": "hace {{count}} minuto",
+    "minutesAgo": "hace {{count}} minutos",
+    "hourAgo": "hace {{count}} hora",
+    "hoursAgo": "hace {{count}} horas",
+    "yesterday": "Ayer"
   },
   "pagination": {
     "previous": "Anterior",

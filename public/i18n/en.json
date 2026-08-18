@@ -34,7 +34,14 @@
     "empty": "No comments yet.",
     "placeholder": "Write a comment...",
     "submit": "Comment",
-    "loginToComment": "Log in to comment."
+    "loginToComment": "Log in to comment.",
+    "secondAgo": "{{count}} second ago",
+    "secondsAgo": "{{count}} seconds ago",
+    "minuteAgo": "{{count}} minute ago",
+    "minutesAgo": "{{count}} minutes ago",
+    "hourAgo": "{{count}} hour ago",
+    "hoursAgo": "{{count}} hours ago",
+    "yesterday": "Yesterday"
   },
   "pagination": {
     "previous": "Previous",
