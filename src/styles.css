@@ -3,19 +3,30 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 @import 'tailwindcss';
 
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
 @theme {
+  --color-app-background: #f7f9fb;
   --color-brand-bg: #f6f7f9;
-  --color-brand-surface: #f8f9fa;
+  --color-brand-surface: #f0f4f7;
   --color-brand-surface-variant: #ffffff;
   --color-brand-title: #1e293b;
   --color-brand-body: #475569;
   --color-brand-muted: #94a3b8;
   --color-brand-accent: #2563eb;
   --color-brand-tag: #e1e9ee;
+  --color-brand-line: #d9e4ea;
 
   --color-brand-primary: #2a3439;
   --color-brand-secondary: #566166;
+  --color-brand-accent: #0053dc;
   --color-brand-tertiary: rgba(86, 97, 102, 0.6);
 
   --font-family-sans: 'Inter', sans-serif;
+
+  --text-xxs: 0.625rem;
 }

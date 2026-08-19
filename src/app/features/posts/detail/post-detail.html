@@ -1,1 +1,51 @@
-<p>post-detail works!</p>
+<section
+  class="w-full max-w-md lg:max-w-2xl mx-auto px-4 py-8"
+  *transloco="let t; prefix: 'posts.detail'"
+>
+  @if (isLoading()) {
+    <div class="text-center p-12 text-lg text-brand-primary">{{ t('loading') }}</div>
+  } @else if (error()) {
+    <div class="text-center p-12 text-lg text-brand-primary">{{ t('error') }}</div>
+  } @else if (post(); as post) {
+    <article>
+      <header class="flex items-start justify-between gap-4">
+        <h1 class="text-3xl font-bold text-brand-title">{{ post.title }}</h1>
+
+        @if (isOwner()) {
+          <div class="flex shrink-0 gap-2">
+            <button
+              type="button"
+              (click)="goToEdit()"
+              [attr.aria-label]="t('edit')"
+              class="inline-flex items-center gap-1 rounded-md bg-brand-accent px-4 py-1 text-sm font-medium text-white transition hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
+            >
+              <span>{{ t('edit') }}</span>
+            </button>
+            <button
+              type="button"
+              (click)="onDelete()"
+              [attr.aria-label]="t('delete')"
+              class="inline-flex items-center gap-1 rounded-md border border-red-200 bg-white px-4 py-1 text-sm font-medium text-red-600 transition hover:bg-red-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500"
+            >
+              <span>{{ t('delete') }}</span>
+            </button>
+          </div>
+        }
+      </header>
+
+      <p class="m-6 whitespace-pre-line text-lg leading-relaxed text-brand-secondary">
+        {{ post.body }}
+      </p>
+
+      <hr class="my-6 border-brand-line" />
+
+      @defer (on viewport) {
+        <app-post-comments [postId]="post.id" />
+      } @placeholder {
+        <div class="mt-8 h-24 animate-pulse rounded-lg bg-brand-surface"></div>
+      }
+    </article>
+  } @else {
+    <div class="text-center p-12 text-lg text-brand-primary">{{ t('notFound') }}</div>
+  }
+</section>

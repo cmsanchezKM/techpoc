@@ -1,0 +1,73 @@
+<section class="mt-8" *transloco="let t; prefix: 'comments'">
+  <h2 class="text-brand-secondary text-xs font-bold uppercase tracking-widest">
+    {{ t('title') }} / {{ commentsApi.comments().length | number: '2.0-0' }}
+  </h2>
+
+  @if (commentsApi.isLoading()) {
+    <p class="mt-4 text-brand-secondary">{{ t('loading') }}</p>
+  } @else if (commentsApi.error()) {
+    <p class="mt-4 text-brand-secondary">{{ t('error') }}</p>
+  } @else {
+    <ul class="mt-4 flex flex-col gap-4">
+      @for (comment of commentsApi.comments(); track comment.id) {
+        @let dateInfo = getCommentDateInfo(comment.createdAt);
+        <li class="p-4">
+          <div class="flex items-center justify-start gap-2">
+            <span class="text-sm font-semibold text-brand-primary">
+              {{ comment.author?.name }}
+            </span>
+            <time [dateTime]="comment.createdAt" class="text-xs text-brand-tertiary">
+              @switch (dateInfo.type) {
+                @case ('seconds') {
+                  {{
+                    t(dateInfo.count === 1 ? 'secondAgo' : 'secondsAgo', { count: dateInfo.count })
+                  }}
+                }
+                @case ('minutes') {
+                  {{
+                    t(dateInfo.count === 1 ? 'minuteAgo' : 'minutesAgo', { count: dateInfo.count })
+                  }}
+                }
+                @case ('hours') {
+                  {{ t(dateInfo.count === 1 ? 'hourAgo' : 'hoursAgo', { count: dateInfo.count }) }}
+                }
+                @case ('yesterday') {
+                  {{ t('yesterday') }}
+                }
+                @default {
+                  <span class="uppercase">{{ comment.createdAt | date: 'dd MMM' }}</span>
+                }
+              }
+            </time>
+          </div>
+          <p class="mt-2 text-sm leading-relaxed text-brand-secondary">{{ comment.body }}</p>
+        </li>
+      } @empty {
+        <li class="text-brand-secondary">{{ t('empty') }}</li>
+      }
+    </ul>
+  }
+
+  @if (authService.isAuthenticated()) {
+    <form class="mt-6 flex flex-col gap-2" (submit)="onSubmit($event)">
+      <label for="new-comment-body" class="sr-only">{{ t('placeholder') }}</label>
+      <textarea
+        id="new-comment-body"
+        rows="3"
+        class="w-full rounded-md border border-brand-line bg-brand-surface-variant p-3 text-sm text-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-accent"
+        [placeholder]="t('placeholder')"
+        [value]="newCommentBody()"
+        (input)="onBodyChange($event)"
+      ></textarea>
+      <button
+        type="submit"
+        class="self-end rounded-md bg-brand-accent px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+        [disabled]="isSubmitting() || !newCommentBody().trim()"
+      >
+        {{ t('submit') }}
+      </button>
+    </form>
+  } @else {
+    <p class="mt-6 text-sm text-brand-secondary">{{ t('loginToComment') }}</p>
+  }
+</section>

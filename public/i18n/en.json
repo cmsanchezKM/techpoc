@@ -17,7 +17,31 @@
         "allAuthors": "All authors",
         "allTags": "All tags"
       }
+    },
+    "detail": {
+      "loading": "Loading post...",
+      "error": "There was an error loading the post.",
+      "notFound": "Post not found.",
+      "by": "By",
+      "edit": "Edit",
+      "delete": "Delete"
     }
+  },
+  "comments": {
+    "title": "Comments",
+    "loading": "Loading comments...",
+    "error": "There was an error loading the comments.",
+    "empty": "No comments yet.",
+    "placeholder": "Write a comment...",
+    "submit": "Comment",
+    "loginToComment": "Log in to comment.",
+    "secondAgo": "{{count}} second ago",
+    "secondsAgo": "{{count}} seconds ago",
+    "minuteAgo": "{{count}} minute ago",
+    "minutesAgo": "{{count}} minutes ago",
+    "hourAgo": "{{count}} hour ago",
+    "hoursAgo": "{{count}} hours ago",
+    "yesterday": "Yesterday"
   },
   "pagination": {
     "previous": "Previous",
