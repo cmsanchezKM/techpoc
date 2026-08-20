@@ -11,19 +11,31 @@ describe('AuthService', () => {
   let usersApi: UsersApi;
 
   const mockUsers: User[] = [
-    { id: '1', name: 'John Doe', email: 'john@example.com', avatar: 'avatar1.jpg' },
-    { id: '2', name: 'Jane Smith', email: 'jane@example.com', avatar: 'avatar2.jpg' },
+    {
+      id: '1',
+      name: 'John Doe',
+      password: 'John Doe',
+      email: 'john@example.com',
+      avatar: 'avatar1.jpg',
+    },
+    {
+      id: '2',
+      name: 'Jane Smith',
+      password: 'Jane Smith',
+      email: 'jane@example.com',
+      avatar: 'avatar2.jpg',
+    },
   ];
 
   beforeEach(() => {
+    // Limpiar localStorage antes de inyectar el servicio
+    localStorage.clear();
+
     TestBed.configureTestingModule({
       providers: [AuthService, UsersApi, provideHttpClient(), provideHttpClientTesting()],
     });
     service = TestBed.inject(AuthService);
     usersApi = TestBed.inject(UsersApi);
-
-    // Limpiar localStorage antes de cada test
-    localStorage.clear();
 
     // Mock del signal de usuarios
     Object.defineProperty(usersApi, 'users', {

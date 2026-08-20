@@ -4,6 +4,7 @@ import { RelativeTimeDirective } from './relative-time.directive';
 import { provideTransloco, TranslocoService, TranslocoLoader } from '@jsverse/transloco';
 import { signal } from '@angular/core';
 import { of } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 class TranslocoLoaderMock implements TranslocoLoader {
@@ -37,7 +38,7 @@ describe('RelativeTimeDirective', () => {
   let timeElement: HTMLTimeElement;
   let translocoService: TranslocoService;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [
         provideTransloco({
@@ -54,7 +55,9 @@ describe('RelativeTimeDirective', () => {
     component = fixture.componentInstance;
     timeElement = fixture.nativeElement.querySelector('time');
     translocoService = TestBed.inject(TranslocoService);
+    await firstValueFrom(translocoService.load('es'));
     translocoService.setActiveLang('es');
+    fixture.detectChanges();
   });
 
   it('should create', () => {

@@ -24,7 +24,7 @@ export class PostComments {
   constructor() {
     // Recarga los comentarios cada vez que cambia el post mostrado.
     effect(() => {
-      this.commentsApi.loadComments(this.postId());
+      this.commentsApi.loadComments(Number(this.postId()));
     });
   }
 
@@ -40,9 +40,15 @@ export class PostComments {
       return;
     }
 
+    const postId = Number(this.postId());
+    const userId = Number(user.id);
+    if (!Number.isFinite(postId) || !Number.isFinite(userId)) {
+      return;
+    }
+
     this.isSubmitting.set(true);
     try {
-      await this.commentsApi.addComment({ postId: this.postId(), userId: user.id, body });
+      await this.commentsApi.addComment({ postId, userId, body });
       this.newCommentBody.set('');
     } finally {
       this.isSubmitting.set(false);
