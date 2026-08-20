@@ -32,8 +32,9 @@
     "loading": "Loading comments...",
     "error": "There was an error loading the comments.",
     "empty": "No comments yet.",
-    "placeholder": "Write a comment...",
-    "submit": "Comment",
+    "label": "Add a comment",
+    "placeholder": "Write your comment...",
+    "submit": "Post comment",
     "loginToComment": "Log in to comment.",
     "secondAgo": "{{count}} second ago",
     "secondsAgo": "{{count}} seconds ago",
@@ -51,5 +52,22 @@
     "goToPage": "Go to page",
     "previousPageLabel": "Go to previous page",
     "nextPageLabel": "Go to next page"
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome",
+      "subtitle": "Enter your credentials",
+      "username": "Username",
+      "usernamePlaceholder": "Username",
+      "password": "Password",
+      "passwordPlaceholder": "••••••••",
+      "submit": "Sign in",
+      "submitAriaLabel": "Sign in to the system",
+      "loading": "Loading...",
+      "help": {
+        "title": "Help",
+        "message": "Use the username as password (e.g., user: Leanne Graham, password: Leanne Graham)"
+      }
+    }
   }
 }

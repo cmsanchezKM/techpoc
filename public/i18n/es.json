@@ -32,8 +32,9 @@
     "loading": "Cargando comentarios...",
     "error": "Hubo un error al cargar los comentarios.",
     "empty": "Todavía no hay comentarios.",
-    "placeholder": "Escribe un comentario...",
-    "submit": "Comentar",
+    "label": "Añadir comentario",
+    "placeholder": "Escribe tu comentario...",
+    "submit": "Publicar comentario",
     "loginToComment": "Inicia sesión para comentar.",
     "secondAgo": "hace {{count}} segundo",
     "secondsAgo": "hace {{count}} segundos",
@@ -51,5 +52,22 @@
     "goToPage": "Ir a página",
     "previousPageLabel": "Ir a página anterior",
     "nextPageLabel": "Ir a página siguiente"
+  },
+  "auth": {
+    "login": {
+      "title": "Bienvenido",
+      "subtitle": "Introduce tus credenciales",
+      "username": "Usuario",
+      "usernamePlaceholder": "Usuario",
+      "password": "Contraseña",
+      "passwordPlaceholder": "••••••••",
+      "submit": "Acceder",
+      "submitAriaLabel": "Acceder al sistema",
+      "loading": "Cargando...",
+      "help": {
+        "title": "Ayuda",
+        "message": "Usa el nombre de usuario como contraseña (por ejemplo, usuario: Leanne Graham, contraseña: Leanne Graham)"
+      }
+    }
   }
 }
