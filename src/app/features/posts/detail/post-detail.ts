@@ -12,11 +12,12 @@ import { Router } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { PostsApi } from '@features/posts/data-access/posts-api';
 import { AuthService } from '@features/auth/data-access/auth.service';
+import { RelativeTimeDirective } from '@shared';
 import { PostComments } from '../comments/post-comments';
 
 @Component({
   selector: 'app-post-detail',
-  imports: [CommonModule, TranslocoDirective, PostComments],
+  imports: [CommonModule, TranslocoDirective, RelativeTimeDirective, PostComments],
   templateUrl: './post-detail.html',
   styleUrl: './post-detail.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -38,8 +39,8 @@ export class PostDetail {
 
   readonly isOwner = computed(() => {
     const post = this.post();
-    const userId = this.authService.currentUserId();
-    return !!post && !!userId && String(post.userId) === userId;
+    const user = this.authService.currentUser();
+    return !!post && !!user && String(post.userId) === String(user.id);
   });
 
   constructor() {

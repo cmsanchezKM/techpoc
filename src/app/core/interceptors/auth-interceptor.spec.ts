@@ -1,40 +1,42 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClient } from '@angular/common/http';
+import { signal } from '@angular/core';
 import { authInterceptor } from './auth-interceptor';
 import { AuthService } from '@features/auth/data-access/auth.service';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('authInterceptor', () => {
-  let authService: AuthService;
   let httpClient: HttpClient;
   let httpMock: HttpTestingController;
+  const tokenSignal = signal<string | null>(null);
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         provideHttpClient(withInterceptors([authInterceptor])),
         provideHttpClientTesting(),
+        {
+          provide: AuthService,
+          useValue: {
+            token: () => tokenSignal(),
+          },
+        },
       ],
     });
 
-    authService = TestBed.inject(AuthService);
     httpClient = TestBed.inject(HttpClient);
     httpMock = TestBed.inject(HttpTestingController);
-    localStorage.clear();
+    tokenSignal.set(null);
   });
 
   afterEach(() => {
     httpMock.verify();
-    localStorage.clear();
+    tokenSignal.set(null);
   });
 
   it('should add Authorization header when user is authenticated', () => {
-    // Simular usuario autenticado estableciendo el token en localStorage
-    localStorage.setItem('auth_token', 'mock-jwt-token-1234567890');
-
-    // Recrear el servicio para que cargue del localStorage
-    authService = TestBed.inject(AuthService);
+    tokenSignal.set('mock-jwt-token-1234567890');
 
     // Hacer una petición HTTP
     httpClient.get('/api/test').subscribe();
@@ -47,7 +49,7 @@ describe('authInterceptor', () => {
 
   it('should not add Authorization header when user is not authenticated', () => {
     // Sin token - usuario no autenticado
-    expect(authService.token()).toBeNull();
+    expect(tokenSignal()).toBeNull();
 
     httpClient.get('/api/test').subscribe();
 
@@ -57,8 +59,7 @@ describe('authInterceptor', () => {
   });
 
   it('should work with different HTTP methods', () => {
-    localStorage.setItem('auth_token', 'mock-jwt-token-1234567890');
-    authService = TestBed.inject(AuthService);
+    tokenSignal.set('mock-jwt-token-1234567890');
 
     // POST
     httpClient.post('/api/posts', { title: 'Test' }).subscribe();

@@ -11,6 +11,12 @@ export interface CommentWithAuthor extends Comment {
   author?: User;
 }
 
+type RawComment = Omit<Comment, 'id' | 'postId' | 'userId'> & {
+  id: number | string;
+  postId: number | string;
+  userId: number | string;
+};
+
 /** Datos necesarios para crear un comentario nuevo. */
 export type CreateCommentPayload = Omit<Comment, 'id' | 'createdAt'>;
 
@@ -22,27 +28,47 @@ export class CommentsApi {
   private apiUrl = `${API_BASE}/comments`;
 
   private readonly selectedPostId = signal<number | undefined>(undefined);
+  private readonly optimisticCommentsByPost = signal<Record<number, Comment[]>>({});
 
-  private readonly commentsResource = httpResource<Comment[]>(() => {
+  private readonly commentsResource = httpResource<RawComment[]>(() => {
     const postId = this.selectedPostId();
     return postId !== undefined ? `${this.apiUrl}?postId=${postId}` : undefined;
   });
 
   // Mapa de usuarios por ID para resolver el autor de cada comentario
   private readonly userMap = computed(() => {
-    const map = new Map<string, User>();
+    const map = new Map<number, User>();
     for (const user of this.usersApi.users()) {
-      map.set(String(user.id), user);
+      map.set(Number(user.id), user);
     }
     return map;
   });
 
+  private normalizeComment(comment: RawComment): Comment {
+    return {
+      ...comment,
+      id: Number(comment.id),
+      postId: Number(comment.postId),
+      userId: Number(comment.userId),
+    };
+  }
+
   /** Comentarios del post seleccionado, ordenados del más antiguo al más reciente. */
   readonly comments: Signal<CommentWithAuthor[]> = computed(() => {
-    const comments = this.commentsResource.value() ?? [];
+    const postId = this.selectedPostId();
+    const comments = (this.commentsResource.value() ?? []).map((comment) =>
+      this.normalizeComment(comment),
+    );
+    const optimisticComments =
+      postId !== undefined ? (this.optimisticCommentsByPost()[postId] ?? []) : [];
     const users = this.userMap();
-    return [...comments]
-      .map((comment) => ({ ...comment, author: users.get(String(comment.userId)) }))
+    const mergedComments = [...comments, ...optimisticComments];
+    const uniqueComments = Array.from(
+      new Map(mergedComments.map((comment) => [String(comment.id), comment])).values(),
+    );
+
+    return uniqueComments
+      .map((comment) => ({ ...comment, author: users.get(comment.userId) }))
       .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
   });
 
@@ -62,12 +88,24 @@ export class CommentsApi {
    * @param payload - Datos del comentario a crear
    */
   async addComment(payload: CreateCommentPayload): Promise<Comment> {
-    const comment = await firstValueFrom(
-      this.http.post<Comment>(this.apiUrl, {
-        ...payload,
+    const normalizedPayload = {
+      ...payload,
+      postId: Number(payload.postId),
+      userId: Number(payload.userId),
+    };
+
+    const rawComment = await firstValueFrom(
+      this.http.post<RawComment>(this.apiUrl, {
+        ...normalizedPayload,
         createdAt: new Date().toISOString(),
       }),
     );
+
+    const comment = this.normalizeComment(rawComment);
+    this.optimisticCommentsByPost.update((current) => ({
+      ...current,
+      [normalizedPayload.postId]: [...(current[normalizedPayload.postId] ?? []), comment],
+    }));
     this.commentsResource.reload();
     return comment;
   }

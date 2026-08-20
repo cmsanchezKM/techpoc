@@ -1760,18 +1760,25 @@
       "id": "sdx9nM5K9gk"
     },
     {
-      "postId": 1,
-      "body": "diagnostic comment",
-      "userId": "1",
-      "createdAt": "2026-08-20T07:26:32.9982626Z",
-      "id": "8OAcSWizkWc"
-    },
-    {
       "postId": "1",
       "userId": "1",
       "body": "Este es otro comentario",
       "createdAt": "2026-08-20T07:29:21.213Z",
       "id": "22pyf3_iZmU"
+    },
+    {
+      "postId": "1",
+      "userId": "1",
+      "body": "comentario de prueba",
+      "createdAt": "2026-08-20T07:34:52.523Z",
+      "id": "t6-aNJnXZRc"
+    },
+    {
+      "postId": 2,
+      "userId": 1,
+      "body": "Vamos a practicar añadiendo un comentario",
+      "createdAt": "2026-08-20T08:59:32.856Z",
+      "id": "JUTM5fvLbqQ"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
