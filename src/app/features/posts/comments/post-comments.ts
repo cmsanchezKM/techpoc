@@ -2,12 +2,12 @@ import { ChangeDetectionStrategy, Component, effect, inject, input, signal } fro
 import { CommonModule } from '@angular/common';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { AuthService } from '@features/auth/data-access/auth.service';
-import { getRelativeDateInfo } from '@core/utils/date.utils';
+import { RelativeTimeDirective } from '@shared';
 import { CommentsApi } from '../data-access/comments-api';
 
 @Component({
   selector: 'app-post-comments',
-  imports: [CommonModule, TranslocoDirective],
+  imports: [CommonModule, TranslocoDirective, RelativeTimeDirective],
   templateUrl: './post-comments.html',
   styleUrl: './post-comments.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,19 +32,17 @@ export class PostComments {
     this.newCommentBody.set((event.target as HTMLTextAreaElement).value);
   }
 
-  protected getCommentDateInfo = getRelativeDateInfo;
-
   async onSubmit(event: Event): Promise<void> {
     event.preventDefault();
     const body = this.newCommentBody().trim();
-    const userId = this.authService.currentUserId();
-    if (!body || !userId) {
+    const user = this.authService.currentUser();
+    if (!body || !user) {
       return;
     }
 
     this.isSubmitting.set(true);
     try {
-      await this.commentsApi.addComment({ postId: this.postId(), userId, body });
+      await this.commentsApi.addComment({ postId: this.postId(), userId: user.id, body });
       this.newCommentBody.set('');
     } finally {
       this.isSubmitting.set(false);

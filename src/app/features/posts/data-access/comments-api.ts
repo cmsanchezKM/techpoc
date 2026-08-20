@@ -22,6 +22,7 @@ export class CommentsApi {
   private apiUrl = `${API_BASE}/comments`;
 
   private readonly selectedPostId = signal<number | undefined>(undefined);
+  private readonly optimisticCommentsByPost = signal<Record<number, Comment[]>>({});
 
   private readonly commentsResource = httpResource<Comment[]>(() => {
     const postId = this.selectedPostId();
@@ -39,9 +40,17 @@ export class CommentsApi {
 
   /** Comentarios del post seleccionado, ordenados del más antiguo al más reciente. */
   readonly comments: Signal<CommentWithAuthor[]> = computed(() => {
+    const postId = this.selectedPostId();
     const comments = this.commentsResource.value() ?? [];
+    const optimisticComments =
+      postId !== undefined ? (this.optimisticCommentsByPost()[postId] ?? []) : [];
     const users = this.userMap();
-    return [...comments]
+    const mergedComments = [...comments, ...optimisticComments];
+    const uniqueComments = Array.from(
+      new Map(mergedComments.map((comment) => [String(comment.id), comment])).values(),
+    );
+
+    return uniqueComments
       .map((comment) => ({ ...comment, author: users.get(String(comment.userId)) }))
       .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
   });
@@ -68,6 +77,10 @@ export class CommentsApi {
         createdAt: new Date().toISOString(),
       }),
     );
+    this.optimisticCommentsByPost.update((current) => ({
+      ...current,
+      [payload.postId]: [...(current[payload.postId] ?? []), comment],
+    }));
     this.commentsResource.reload();
     return comment;
   }

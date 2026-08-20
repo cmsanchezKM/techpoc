@@ -4,41 +4,22 @@
   </h2>
 
   @if (commentsApi.isLoading()) {
-    <p class="mt-4 text-brand-secondary">{{ t('loading') }}</p>
+    <p class="mt-8 text-brand-secondary">{{ t('loading') }}</p>
   } @else if (commentsApi.error()) {
-    <p class="mt-4 text-brand-secondary">{{ t('error') }}</p>
+    <p class="mt-8 text-brand-secondary">{{ t('error') }}</p>
   } @else {
-    <ul class="mt-4 flex flex-col gap-4">
+    <ul class="mt-8 flex flex-col gap-8">
       @for (comment of commentsApi.comments(); track comment.id) {
-        @let dateInfo = getCommentDateInfo(comment.createdAt);
-        <li class="p-4">
+        <li>
           <div class="flex items-center justify-start gap-2">
             <span class="text-sm font-semibold text-brand-primary">
-              {{ comment.author?.name }}
+              {{ comment.author?.name | titlecase }}
             </span>
-            <time [dateTime]="comment.createdAt" class="text-xs text-brand-tertiary">
-              @switch (dateInfo.type) {
-                @case ('seconds') {
-                  {{
-                    t(dateInfo.count === 1 ? 'secondAgo' : 'secondsAgo', { count: dateInfo.count })
-                  }}
-                }
-                @case ('minutes') {
-                  {{
-                    t(dateInfo.count === 1 ? 'minuteAgo' : 'minutesAgo', { count: dateInfo.count })
-                  }}
-                }
-                @case ('hours') {
-                  {{ t(dateInfo.count === 1 ? 'hourAgo' : 'hoursAgo', { count: dateInfo.count }) }}
-                }
-                @case ('yesterday') {
-                  {{ t('yesterday') }}
-                }
-                @default {
-                  <span class="uppercase">{{ comment.createdAt | date: 'dd MMM' }}</span>
-                }
-              }
-            </time>
+            <time
+              appRelativeTime
+              [date]="comment.createdAt"
+              class="text-xs text-brand-tertiary"
+            ></time>
           </div>
           <p class="mt-2 text-sm leading-relaxed text-brand-secondary">{{ comment.body }}</p>
         </li>
@@ -49,8 +30,13 @@
   }
 
   @if (authService.isAuthenticated()) {
-    <form class="mt-6 flex flex-col gap-2" (submit)="onSubmit($event)">
-      <label for="new-comment-body" class="sr-only">{{ t('placeholder') }}</label>
+    <form
+      class="mt-6 flex flex-col gap-2 bg-brand-surface p-8 rounded-lg"
+      (submit)="onSubmit($event)"
+    >
+      <label for="new-comment-body" class="text-sm font-semibold text-brand-primary">{{
+        t('label')
+      }}</label>
       <textarea
         id="new-comment-body"
         rows="3"
