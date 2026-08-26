@@ -10,6 +10,8 @@ body {
 }
 
 @theme {
+  --font-sans: 'Inter', sans-serif;
+  --font-mono: 'Inter', monospace;
   --color-app-background: #f7f9fb;
   --color-brand-bg: #f6f7f9;
   --color-brand-surface: #f0f4f7;

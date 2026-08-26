@@ -69,5 +69,9 @@
         "message": "Use the username as password (e.g., user: Leanne Graham, password: Leanne Graham)"
       }
     }
+  },
+  "header": {
+    "languageSelector": "Language selector",
+    "logout": "Log out"
   }
 }

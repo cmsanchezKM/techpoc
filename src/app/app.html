@@ -1,13 +1,5 @@
-<header class="app-header">
-  <nav class="nav-container">
-    <div class="logo" routerLink="/">Blog Tech</div>
-    <div class="nav-actions">
-      <button (click)="changeLang('es')">ES</button>
-      <button (click)="changeLang('en')">EN</button>
-    </div>
-  </nav>
-</header>
+<app-header />
 
-<main class="content-container">
+<main class="max-w-[1200px] mx-auto px-8">
   <router-outlet></router-outlet>
 </main>

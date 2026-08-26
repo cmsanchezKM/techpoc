@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-card-title',
   template: `
-    <h2 class="text-3xl font-bold text-brand-primary">
+    <h2 class="text-3xl tracking-tighter font-bold text-brand-primary">
       {{ title() }}
     </h2>
   `,

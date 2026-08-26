@@ -34,6 +34,7 @@ export const appConfig: ApplicationConfig = {
         defaultLang: 'es',
         fallbackLang: 'es',
         availableLangs: ['es', 'en'],
+        reRenderOnLangChange: true,
         prodMode: true,
       },
       loader: TranslocoHttpLoader,

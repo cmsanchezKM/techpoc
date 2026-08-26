@@ -1,18 +1,12 @@
-import { Component, inject, signal } from '@angular/core';
-import { RouterOutlet, RouterLink } from '@angular/router';
-import { TranslocoService } from '@jsverse/transloco';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { HeaderComponent } from './shared/header/header';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink],
+  imports: [RouterOutlet, HeaderComponent],
   templateUrl: './app.html',
-  styleUrl: './app.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'block min-h-screen bg-brand-bg font-sans text-brand-title' },
 })
-export class App {
-  protected readonly title = signal('techpoc');
-  private readonly transloco = inject(TranslocoService);
-
-  changeLang(lang: string) {
-    this.transloco.setActiveLang(lang);
-  }
-}
+export class App {}
