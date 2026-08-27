@@ -5,6 +5,7 @@ import { TranslocoDirective } from '@jsverse/transloco';
 import { CardComponent, PaginationComponent, SelectComponent } from '@shared';
 import { CommonModule } from '@angular/common';
 import { PostFilters } from '@features/posts/data-access/post-filters';
+import { AuthService } from '@features/auth/data-access/auth.service';
 
 const ITEMS_PER_PAGE = 6;
 
@@ -19,6 +20,7 @@ export class PostList {
   private readonly router = inject(Router);
   protected postsService = inject(PostsApi);
   protected filterService = inject(PostFilters);
+  protected authService = inject(AuthService);
 
   /** Página actual, propia de esta vista (no compartida globalmente). */
   readonly currentPage = signal(1);
@@ -102,7 +104,11 @@ export class PostList {
     this.currentPage.set(page);
   }
 
-  goToViewDetail(id: number): void {
+  goToViewDetail(id: string): void {
     this.router.navigate(['/posts', id]);
+  }
+
+  goToNewPost(): void {
+    this.router.navigate(['/posts', 'new']);
   }
 }

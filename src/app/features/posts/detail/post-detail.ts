@@ -31,7 +31,7 @@ export class PostDetail {
   /** ID del post, vinculado desde el parámetro de ruta `:id`. */
   readonly id = input.required<string>();
 
-  private readonly postId = computed(() => Number(this.id()));
+  private readonly postId = computed(() => this.id());
 
   readonly post = computed(() => this.postsService.selectedPost());
   readonly isLoading = this.postsService.postLoading;

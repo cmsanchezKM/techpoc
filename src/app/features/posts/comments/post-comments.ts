@@ -16,7 +16,7 @@ export class PostComments {
   protected commentsApi = inject(CommentsApi);
   protected authService = inject(AuthService);
 
-  readonly postId = input.required<number>();
+  readonly postId = input.required<string | number>();
 
   readonly newCommentBody = signal('');
   readonly isSubmitting = signal(false);

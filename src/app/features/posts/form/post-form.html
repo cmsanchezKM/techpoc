@@ -1,1 +1,80 @@
-<p>post-form works!</p>
+<section class="w-full max-w-4xl mx-auto px-4 py-8" *transloco="let t; prefix: 'posts.form'">
+  @if (isEditMode() && loading()) {
+    <div class="text-center p-12 text-lg text-brand-primary">{{ t('loading') }}</div>
+  } @else if (isEditMode() && error()) {
+    <div class="text-center p-12 text-lg text-brand-primary">{{ t('error') }}</div>
+  } @else {
+    <header class="mb-12">
+      <h1 class="text-4xl font-extrabold tracking-tight text-brand-primary">
+        {{ isEditMode() ? t('editTitle') : t('newTitle') }}
+      </h1>
+      <p class="mt-2 text-base text-brand-secondary">{{ t('subtitle') }}</p>
+    </header>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-8">
+      <div class="flex flex-col gap-3">
+        <label for="title" class="text-xs font-bold uppercase tracking-widest text-brand-secondary">
+          {{ t('titleLabel') }}
+        </label>
+        <input
+          id="title"
+          type="text"
+          formControlName="title"
+          [placeholder]="t('titlePlaceholder')"
+          class="w-full rounded bg-brand-line px-6 py-4 text-2xl font-bold text-brand-primary placeholder:text-brand-secondary/70 focus:outline-none focus:ring-2 focus:ring-brand-accent"
+          aria-required="true"
+        />
+      </div>
+
+      <div class="flex flex-col gap-3">
+        <label for="body" class="text-xs font-bold uppercase tracking-widest text-brand-secondary">
+          {{ t('bodyLabel') }}
+        </label>
+        <textarea
+          id="body"
+          rows="12"
+          formControlName="body"
+          [placeholder]="t('bodyPlaceholder')"
+          class="w-full resize-none rounded bg-brand-line px-6 py-6 text-lg text-brand-body placeholder:text-brand-secondary/70 focus:outline-none focus:ring-2 focus:ring-brand-accent"
+          aria-required="true"
+        ></textarea>
+      </div>
+
+      <div class="flex flex-col gap-3">
+        <label for="tags" class="text-xs font-bold uppercase tracking-widest text-brand-secondary">
+          {{ t('tagsLabel') }}
+        </label>
+        <div class="relative">
+          <app-icon
+            name="hash"
+            class="pointer-events-none absolute left-5 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-secondary"
+          />
+          <input
+            id="tags"
+            type="text"
+            formControlName="tags"
+            [placeholder]="t('tagsPlaceholder')"
+            class="w-full rounded bg-brand-line py-4 pl-12 pr-6 text-base text-brand-body placeholder:text-brand-secondary/70 focus:outline-none focus:ring-2 focus:ring-brand-accent"
+          />
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between border-t border-brand-line/50 pt-8">
+        <button
+          type="button"
+          (click)="onCancel()"
+          class="rounded-md px-8 py-3 text-base font-semibold text-brand-secondary transition-colors hover:text-brand-primary"
+        >
+          {{ t('cancel') }}
+        </button>
+        <button
+          type="submit"
+          [disabled]="!form.valid || submitting()"
+          class="rounded-md bg-linear-to-br from-brand-accent to-[#3e76fe] px-10 py-3 text-base font-bold text-white shadow-[0_10px_20px_rgba(0,83,220,0.15)] transition-opacity hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {{ isEditMode() ? t('save') : t('publish') }}
+        </button>
+      </div>
+    </form>
+  }
+</section>

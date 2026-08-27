@@ -10,6 +10,7 @@
       "error": "There was an error loading the posts.",
       "noResults": "No posts found matching the filters.",
       "showingResults": "Showing {{current}} of {{total}} results",
+      "newPost": "New post",
       "readMore": "Read more",
       "by": "By",
       "empty": "No posts available.",
@@ -25,6 +26,23 @@
       "by": "By",
       "edit": "Edit",
       "delete": "Delete"
+    },
+    "form": {
+      "newTitle": "New post",
+      "editTitle": "Edit post",
+      "subtitle": "Write your post",
+      "loading": "Loading post...",
+      "error": "There was an error loading the post.",
+      "titleLabel": "Title",
+      "titlePlaceholder": "Post title...",
+      "bodyLabel": "Content",
+      "bodyPlaceholder": "Post content...",
+      "tagsLabel": "Tags",
+      "tagsPlaceholder": "tags, comma separated",
+      "cancel": "Cancel",
+      "publish": "Publish",
+      "save": "Save",
+      "newPost": "New post"
     }
   },
   "comments": {

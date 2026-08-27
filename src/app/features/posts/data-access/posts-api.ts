@@ -24,7 +24,7 @@ export class PostsApi {
 
   private apiUrl = `${API_BASE}/posts`;
 
-  private readonly selectedPostId = signal<number | undefined>(undefined);
+  private readonly selectedPostId = signal<string | undefined>(undefined);
 
   private readonly postsResource = httpResource<Post[]>(() => this.apiUrl);
   private readonly postByIdResource = httpResource<Post>(
@@ -66,7 +66,7 @@ export class PostsApi {
    * Obtiene un post específico por su ID.
    * @param id - ID del post a obtener
    */
-  getPostById(id: number): Signal<PostWithAuthor | undefined> {
+  getPostById(id: string): Signal<PostWithAuthor | undefined> {
     this.selectedPostId.set(id);
     return this.selectedPost;
   }
@@ -98,7 +98,7 @@ export class PostsApi {
    * @param id - ID del post a editar
    * @param payload - Campos a actualizar
    */
-  async updatePost(id: number, payload: UpdatePostPayload): Promise<Post> {
+  async updatePost(id: string, payload: UpdatePostPayload): Promise<Post> {
     const post = await firstValueFrom(this.http.patch<Post>(`${this.apiUrl}/${id}`, payload));
     this.postsResource.reload();
     if (this.selectedPostId() === id) {
@@ -111,7 +111,7 @@ export class PostsApi {
    * Borra un post y refresca el listado.
    * @param id - ID del post a borrar
    */
-  async deletePost(id: number): Promise<void> {
+  async deletePost(id: string): Promise<void> {
     await firstValueFrom(this.http.delete<void>(`${this.apiUrl}/${id}`));
     this.postsResource.reload();
     if (this.selectedPostId() === id) {

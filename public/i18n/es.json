@@ -10,6 +10,7 @@
       "error": "Hubo un error al cargar los posts.",
       "noResults": "No se encontraron posts que coincidan con los filtros.",
       "showingResults": "Mostrando {{current}} de {{total}} resultados",
+      "newPost": "Nuevo post",
       "readMore": "Leer más",
       "by": "Por",
       "empty": "No hay posts disponibles.",
@@ -25,6 +26,23 @@
       "by": "Por",
       "edit": "Editar",
       "delete": "Eliminar"
+    },
+    "form": {
+      "newTitle": "Nuevo post",
+      "editTitle": "Editar post",
+      "subtitle": "Escribe tu post",
+      "loading": "Cargando post...",
+      "error": "Hubo un error al cargar el post.",
+      "titleLabel": "Título",
+      "titlePlaceholder": "Título del post...",
+      "bodyLabel": "Contenido",
+      "bodyPlaceholder": "Contenido del post...",
+      "tagsLabel": "Tags",
+      "tagsPlaceholder": "tags, separados por coma",
+      "cancel": "Cancelar",
+      "publish": "Publicar",
+      "save": "Guardar",
+      "newPost": "Nuevo post"
     }
   },
   "comments": {
