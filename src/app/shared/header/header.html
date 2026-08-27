@@ -35,11 +35,21 @@
       @if (auth.isAuthenticated()) {
         <button
           type="button"
-          class="w-[3.25rem] h-[2.75rem] grid place-items-center border-2 border-brand-primary rounded-[0.8rem] bg-transparent text-brand-primary cursor-pointer p-0"
+          class="inline-flex items-center gap-2 bg-transparent text-brand-primary cursor-pointer p-0"
           [attr.aria-label]="'header.logout' | transloco"
           (click)="logout()"
         >
-          <app-icon name="log-out" class="h-5 w-5" />
+          <app-icon name="log" class="h-5 w-5" />
+          <span>{{ 'header.logout' | transloco }}</span>
+        </button>
+      } @else {
+        <button
+          type="button"
+          class="inline-flex items-center gap-2 bg-transparent text-brand-primary cursor-pointer p-0"
+          [attr.aria-label]="'header.login' | transloco"
+          (click)="login()"
+        >
+          <app-icon name="log" class="h-5 w-5" />
         </button>
       }
     </div>

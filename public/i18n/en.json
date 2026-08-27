@@ -72,6 +72,7 @@
   },
   "header": {
     "languageSelector": "Language selector",
-    "logout": "Log out"
+    "logout": "Exit",
+    "login": "Log in"
   }
 }
