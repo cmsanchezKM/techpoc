@@ -1,0 +1,5 @@
+.lang-option.is-active {
+  background: var(--color-brand-accent);
+  color: #fff;
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--color-brand-accent) 28%, transparent);
+}

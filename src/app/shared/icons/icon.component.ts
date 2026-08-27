@@ -11,7 +11,8 @@ export type IconName =
   | 'lock'
   | 'alert-circle'
   | 'x'
-  | 'info';
+  | 'info'
+  | 'log';
 
 @Component({
   selector: 'app-icon',
@@ -23,7 +24,7 @@ export type IconName =
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
-      stroke-width="2"
+      stroke-width="strokeWidth()"
     >
       @switch (name()) {
         @case ('arrow-left') {
@@ -84,6 +85,13 @@ export type IconName =
             d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
           />
         }
+        @case ('log') {
+          <path
+            stroke-width="0"
+            fill="currentColor"
+            d="M2 18C1.45 18 0.979167 17.8042 0.5875 17.4125C0.195833 17.0208 0 16.55 0 16V2C0 1.45 0.195833 0.979167 0.5875 0.5875C0.979167 0.195833 1.45 0 2 0H9V2H2V16H9V18H2ZM13 14L11.625 12.55L14.175 10H6V8H14.175L11.625 5.45L13 4L18 9L13 14Z"
+          />
+        }
       }
     </svg>
   `,
@@ -94,6 +102,7 @@ export type IconName =
 })
 export class IconComponent {
   name = input.required<IconName>();
+  strokeWidth = input('2');
   class = input('h-4 w-4');
   ariaHidden = input<boolean | 'true' | 'false'>('true');
 }

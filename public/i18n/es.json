@@ -69,5 +69,10 @@
         "message": "Usa el nombre de usuario como contraseña (por ejemplo, usuario: Leanne Graham, contraseña: Leanne Graham)"
       }
     }
+  },
+  "header": {
+    "languageSelector": "Selector de idioma",
+    "logout": "Salir",
+    "login": "Iniciar sesión"
   }
 }
