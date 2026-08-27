@@ -8,13 +8,34 @@
     </div>
 
     <div class="flex items-center gap-4 ml-auto">
+      @if (isPostsListPage()) {
+        <div
+          class="bg-brand-surface border border-brand-line flex items-center px-3.25 py-1.75 rounded w-80"
+        >
+          <app-icon
+            name="search"
+            stroke-width="0"
+            viewBox="-2 -2 15 15"
+            class="h-5 w-5 shrink-0 text-brand-secondary pointer-events-none"
+          />
+          <input
+            type="search"
+            class="w-full pl-3 bg-transparent border-0 text-sm text-brand-secondary placeholder:text-brand-secondary focus:outline-none"
+            [value]="filters.searchTerm()"
+            (input)="onSearchInput($event)"
+            [placeholder]="'posts.list.placeholder' | transloco"
+            [attr.aria-label]="'posts.list.search' | transloco"
+          />
+        </div>
+      }
+
       <div
-        class="inline-flex items-center bg-brand-line rounded-full p-1 shadow-[inset_0_0_0_1px_rgba(17,17,17,0.06)]"
+        class="inline-flex items-center bg-brand-tag rounded-full p-1.5 shadow-[inset_0_0_0_1px_rgba(17,17,17,0.06)]"
         [attr.aria-label]="'header.languageSelector' | transloco"
       >
         <button
           type="button"
-          class="lang-option border-0 bg-transparent text-brand-secondary text-[0.9rem] font-bold leading-none px-4 py-2 rounded-full cursor-pointer transition-all duration-200"
+          class="lang-option border-0 bg-transparent text-brand-secondary text-[0.9rem] font-bold leading-none px-5 py-2.5 rounded-full cursor-pointer transition-all duration-200"
           [class.is-active]="lang.current() === 'es'"
           (click)="changeLang('es')"
           [attr.aria-pressed]="lang.current() === 'es'"
@@ -23,7 +44,7 @@
         </button>
         <button
           type="button"
-          class="lang-option border-0 bg-transparent text-brand-secondary text-[0.9rem] font-bold leading-none px-4 py-2 rounded-full cursor-pointer transition-all duration-200"
+          class="lang-option border-0 bg-transparent text-brand-secondary text-[0.9rem] font-bold leading-none px-5 py-2.5 rounded-full cursor-pointer transition-all duration-200"
           [class.is-active]="lang.current() === 'en'"
           (click)="changeLang('en')"
           [attr.aria-pressed]="lang.current() === 'en'"
