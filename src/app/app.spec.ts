@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import { render, screen } from '@testing-library/angular';
 import { provideRouter } from '@angular/router';
 import { provideTransloco, TranslocoLoader } from '@jsverse/transloco';
 import { of } from 'rxjs';
@@ -6,37 +6,38 @@ import { App } from './app';
 
 class TranslocoLoaderMock implements TranslocoLoader {
   getTranslation() {
-    return of({});
+    return of({
+      header: {
+        languageSelector: 'Selector de idioma',
+        login: 'Iniciar sesión',
+      },
+    });
   }
 }
 
-describe('App', () => {
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [App],
-      providers: [
-        provideRouter([]),
-        provideTransloco({
-          config: {
-            availableLangs: ['es', 'en'],
-            defaultLang: 'es',
-          },
-          loader: TranslocoLoaderMock,
-        }),
-      ],
-    }).compileComponents();
+async function setup() {
+  return render(App, {
+    providers: [
+      provideRouter([]),
+      provideTransloco({
+        config: {
+          availableLangs: ['es', 'en'],
+          defaultLang: 'es',
+        },
+        loader: TranslocoLoaderMock,
+      }),
+    ],
   });
+}
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(App);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
+describe('App', () => {
+  it('should create the app', async () => {
+    const { fixture } = await setup();
+    expect(fixture.componentInstance).toBeTruthy();
   });
 
   it('should render header brand', async () => {
-    const fixture = TestBed.createComponent(App);
-    await fixture.whenStable();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.logo')?.textContent).toContain('Blog Tech');
+    await setup();
+    expect(screen.getByText('TechPoC')).toBeInTheDocument();
   });
 });
