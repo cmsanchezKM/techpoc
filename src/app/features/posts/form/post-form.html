@@ -11,7 +11,22 @@
       <p class="mt-2 text-base text-brand-secondary">{{ t('subtitle') }}</p>
     </header>
 
-    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-8">
+    @if (submitError()) {
+      <div class="mb-8 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
+        <app-icon name="alert-circle" class="h-5 w-5 text-red-600 shrink-0 mt-0.5" />
+        <p class="flex-1 text-sm text-red-800 font-medium">{{ t('submitError') }}</p>
+        <button
+          type="button"
+          (click)="submitError.set(null)"
+          class="text-red-400 hover:text-red-600 transition-colors"
+          aria-label="Cerrar mensaje de error"
+        >
+          <app-icon name="x" class="h-4 w-4" />
+        </button>
+      </div>
+    }
+
+    <form [formRoot]="postForm" class="flex flex-col gap-8">
       <div class="flex flex-col gap-3">
         <label for="title" class="text-xs font-bold uppercase tracking-widest text-brand-secondary">
           {{ t('titleLabel') }}
@@ -19,9 +34,9 @@
         <input
           id="title"
           type="text"
-          formControlName="title"
+          [formField]="postForm.title"
           [placeholder]="t('titlePlaceholder')"
-          class="w-full rounded bg-brand-line px-6 py-4 text-2xl font-bold text-brand-primary placeholder:text-brand-secondary/70 focus:outline-none focus:ring-2 focus:ring-brand-accent"
+          class="w-full rounded bg-brand-line px-6 py-4 text-2xl font-bold text-brand-primary placeholder:text-brand-secondary/70 focus:outline-none focus:ring-2 focus:ring-brand-accent disabled:opacity-50 disabled:cursor-not-allowed"
           aria-required="true"
         />
       </div>
@@ -33,9 +48,9 @@
         <textarea
           id="body"
           rows="12"
-          formControlName="body"
+          [formField]="postForm.body"
           [placeholder]="t('bodyPlaceholder')"
-          class="w-full resize-none rounded bg-brand-line px-6 py-6 text-lg text-brand-body placeholder:text-brand-secondary/70 focus:outline-none focus:ring-2 focus:ring-brand-accent"
+          class="w-full resize-none rounded bg-brand-line px-6 py-6 text-lg text-brand-body placeholder:text-brand-secondary/70 focus:outline-none focus:ring-2 focus:ring-brand-accent disabled:opacity-50 disabled:cursor-not-allowed"
           aria-required="true"
         ></textarea>
       </div>
@@ -52,9 +67,9 @@
           <input
             id="tags"
             type="text"
-            formControlName="tags"
+            [formField]="postForm.tags"
             [placeholder]="t('tagsPlaceholder')"
-            class="w-full rounded bg-brand-line py-4 pl-12 pr-6 text-base text-brand-body placeholder:text-brand-secondary/70 focus:outline-none focus:ring-2 focus:ring-brand-accent"
+            class="w-full rounded bg-brand-line py-4 pl-12 pr-6 text-base text-brand-body placeholder:text-brand-secondary/70 focus:outline-none focus:ring-2 focus:ring-brand-accent disabled:opacity-50 disabled:cursor-not-allowed"
           />
         </div>
       </div>
@@ -69,7 +84,7 @@
         </button>
         <button
           type="submit"
-          [disabled]="!form.valid || submitting()"
+          [disabled]="!postForm().valid() || submitting()"
           class="rounded-md bg-linear-to-br from-brand-accent to-[#3e76fe] px-10 py-3 text-base font-bold text-white shadow-[0_10px_20px_rgba(0,83,220,0.15)] transition-opacity hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {{ isEditMode() ? t('save') : t('publish') }}

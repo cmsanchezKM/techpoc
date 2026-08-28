@@ -33,6 +33,7 @@
       "subtitle": "Escribe tu post",
       "loading": "Cargando post...",
       "error": "Hubo un error al cargar el post.",
+      "submitError": "Hubo un error al guardar el post.",
       "titleLabel": "Título",
       "titlePlaceholder": "Título del post...",
       "bodyLabel": "Contenido",
