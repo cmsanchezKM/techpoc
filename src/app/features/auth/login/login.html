@@ -31,7 +31,7 @@
         </div>
       }
 
-      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <form [formRoot]="loginForm">
         <!-- Campo Usuario -->
         <div class="mb-6">
           <label for="username" class="block text-xs font-medium text-brand-body uppercase mb-2">
@@ -44,9 +44,8 @@
             <input
               id="username"
               type="text"
-              formControlName="username"
+              [formField]="loginForm.username"
               [placeholder]="t('auth.login.usernamePlaceholder')"
-              [disabled]="loading()"
               class="w-full pl-10 pr-3 py-2.5 bg-brand-surface border-0 rounded text-brand-title placeholder-brand-muted focus:outline-none focus:ring-2 focus:ring-brand-accent disabled:opacity-50 disabled:cursor-not-allowed"
               aria-required="true"
             />
@@ -65,9 +64,8 @@
             <input
               id="password"
               type="password"
-              formControlName="password"
+              [formField]="loginForm.password"
               [placeholder]="t('auth.login.passwordPlaceholder')"
-              [disabled]="loading()"
               class="w-full pl-10 pr-3 py-2.5 bg-brand-surface border-0 rounded text-brand-title placeholder-brand-muted focus:outline-none focus:ring-2 focus:ring-brand-accent disabled:opacity-50 disabled:cursor-not-allowed"
               aria-required="true"
             />
@@ -77,7 +75,7 @@
         <!-- Botón Acceder -->
         <button
           type="submit"
-          [disabled]="!loginForm.valid || loading()"
+          [disabled]="!loginForm().valid() || loading()"
           class="w-full flex items-center justify-center gap-2 bg-brand-accent text-white py-3 px-4 rounded font-medium hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-brand-accent focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           [attr.aria-label]="t('auth.login.submitAriaLabel')"
         >
