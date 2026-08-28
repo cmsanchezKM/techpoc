@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from '../../core/guards/auth-guard';
+import { ownerGuard } from '../../core/guards/owner-guard';
 
 export const POSTS_ROUTES: Routes = [
   {
@@ -15,7 +16,7 @@ export const POSTS_ROUTES: Routes = [
   },
   {
     path: ':id/edit',
-    canActivate: [authGuard],
+    canActivate: [authGuard, ownerGuard],
     loadComponent: () => import('./form/post-form').then((m) => m.PostForm),
     title: 'Editar post · TechPoC',
   },
