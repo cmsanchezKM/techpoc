@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from '../../core/guards/auth-guard';
 import { ownerGuard } from '../../core/guards/owner-guard';
+import { postExistsGuard } from '../../core/guards/post-exists-guard';
 
 export const POSTS_ROUTES: Routes = [
   {
@@ -22,6 +23,7 @@ export const POSTS_ROUTES: Routes = [
   },
   {
     path: ':id',
+    canActivate: [postExistsGuard],
     loadComponent: () => import('./detail/post-detail').then((m) => m.PostDetail),
     title: 'Post · TechPoC',
   },

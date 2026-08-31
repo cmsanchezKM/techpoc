@@ -8,11 +8,10 @@ import {
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { Observable } from 'rxjs';
-import { ownerGuard } from './owner-guard';
-import { AuthService } from '@features/auth/data-access/auth.service';
+import { postExistsGuard } from './post-exists-guard';
 import { API_BASE } from 'environments/environment';
 
-describe('ownerGuard', () => {
+describe('postExistsGuard', () => {
   let httpMock: HttpTestingController;
 
   beforeEach(() => {
@@ -20,35 +19,21 @@ describe('ownerGuard', () => {
       providers: [provideHttpClient(), provideHttpClientTesting()],
     });
 
-    localStorage.clear();
-    localStorage.setItem('auth_token', 'mock-jwt-token-1234567890');
-    localStorage.setItem(
-      'auth_user',
-      JSON.stringify({
-        id: '1',
-        name: 'Test User',
-        email: 'test@example.com',
-        avatar: 'avatar.jpg',
-      }),
-    );
-
     httpMock = TestBed.inject(HttpTestingController);
   });
 
   afterEach(() => {
     httpMock.verify();
-    localStorage.clear();
   });
 
   function runGuard(id: string) {
     const route = { paramMap: convertToParamMap({ id }) } as unknown as ActivatedRouteSnapshot;
     return TestBed.runInInjectionContext(() =>
-      ownerGuard(route, {} as RouterStateSnapshot),
+      postExistsGuard(route, {} as RouterStateSnapshot),
     ) as Observable<unknown>;
   }
 
-  it('allows access when the post belongs to the current user', async () => {
-    TestBed.inject(AuthService);
+  it('allows access when the post exists', async () => {
     const result = runGuard('42');
     const valuePromise = new Promise((resolve) => result.subscribe(resolve));
 
@@ -57,22 +42,7 @@ describe('ownerGuard', () => {
     await expect(valuePromise).resolves.toBe(true);
   });
 
-  it('redirects to /forbidden when the post belongs to another user', async () => {
-    TestBed.inject(AuthService);
-    const result = runGuard('42');
-    const valuePromise = new Promise((resolve) => result.subscribe(resolve));
-
-    httpMock.expectOne(`${API_BASE}/posts/42`).flush({ id: '42', userId: 999 });
-
-    const router = TestBed.inject(Router);
-    const value = await valuePromise;
-    expect((value as { toString(): string }).toString()).toBe(
-      router.parseUrl('/forbidden').toString(),
-    );
-  });
-
   it('redirects to /not-found when the post does not exist', async () => {
-    TestBed.inject(AuthService);
     const result = runGuard('999');
     const valuePromise = new Promise((resolve) => result.subscribe(resolve));
 
