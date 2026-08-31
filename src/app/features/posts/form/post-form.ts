@@ -1,14 +1,28 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  signal,
+} from '@angular/core';
+import { FormField, FormRoot, disabled, form, required } from '@angular/forms/signals';
 import { Router } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { IconComponent } from '@shared/icons/icon.component';
 import { PostsApi } from '@features/posts/data-access/posts-api';
 import { AuthService } from '@features/auth/data-access/auth.service';
 
+interface PostFormModel {
+  title: string;
+  body: string;
+  tags: string;
+}
+
 @Component({
   selector: 'app-post-form',
-  imports: [ReactiveFormsModule, IconComponent, TranslocoDirective],
+  imports: [FormField, FormRoot, IconComponent, TranslocoDirective],
   templateUrl: './post-form.html',
   styleUrl: './post-form.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,12 +42,57 @@ export class PostForm {
   readonly loading = this.postsService.postLoading;
   readonly submitting = this.postsService.isLoading;
   readonly error = this.postsService.postError;
+  readonly submitError = signal<string | null>(null);
 
-  form = new FormGroup({
-    title: new FormControl('', [Validators.required]),
-    body: new FormControl('', [Validators.required]),
-    tags: new FormControl(''),
-  });
+  private readonly model = signal<PostFormModel>({ title: '', body: '', tags: '' });
+  readonly postForm = form(
+    this.model,
+    (path) => {
+      required(path.title);
+      required(path.body);
+      disabled(path.title, () => this.submitting());
+      disabled(path.body, () => this.submitting());
+      disabled(path.tags, () => this.submitting());
+    },
+    {
+      submission: {
+        action: async (field) => {
+          this.submitError.set(null);
+          const { title, body, tags } = field().value();
+          const parsedTags = tags
+            .split(',')
+            .map((tag) => tag.trim())
+            .filter((tag) => tag.length > 0);
+
+          try {
+            const id = this.postId();
+            if (id !== undefined) {
+              await this.postsService.updatePost(id, {
+                title: title.trim(),
+                body: body.trim(),
+                tags: parsedTags,
+              });
+              this.router.navigate(['/posts', id]);
+              return;
+            }
+
+            const userId = this.authService.currentUser()?.id ?? '';
+            const created = await this.postsService.createPost({
+              userId,
+              title: title.trim(),
+              body: body.trim(),
+              tags: parsedTags,
+            });
+            this.router.navigate(['/posts', created.id]);
+          } catch (error) {
+            this.submitError.set(
+              error instanceof Error ? error.message : 'Error al guardar el post',
+            );
+          }
+        },
+      },
+    },
+  );
 
   constructor() {
     // Carga el post a editar y precarga el formulario cuando cambia el ID de la ruta.
@@ -54,36 +113,12 @@ export class PostForm {
       if (!post) {
         return;
       }
-      this.form.patchValue({
+      this.model.set({
         title: post.title,
         body: post.body,
         tags: post.tags.join(', '),
       });
     });
-  }
-
-  async onSubmit(): Promise<void> {
-    if (!this.form.valid) {
-      return;
-    }
-
-    const title = this.form.value.title!.trim();
-    const body = this.form.value.body!.trim();
-    const tags = (this.form.value.tags ?? '')
-      .split(',')
-      .map((tag) => tag.trim())
-      .filter((tag) => tag.length > 0);
-
-    const id = this.postId();
-    if (id !== undefined) {
-      await this.postsService.updatePost(id, { title, body, tags });
-      this.router.navigate(['/posts', id]);
-      return;
-    }
-
-    const userId = this.authService.currentUser()?.id ?? '';
-    const post = await this.postsService.createPost({ userId, title, body, tags });
-    this.router.navigate(['/posts', post.id]);
   }
 
   onCancel(): void {
