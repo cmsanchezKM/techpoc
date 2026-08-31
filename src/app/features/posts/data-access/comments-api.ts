@@ -12,9 +12,9 @@ export interface CommentWithAuthor extends Comment {
 }
 
 type RawComment = Omit<Comment, 'id' | 'postId' | 'userId'> & {
-  id: number | string;
-  postId: number | string;
-  userId: number | string;
+  id: string;
+  postId: string;
+  userId: string;
 };
 
 /** Datos necesarios para crear un comentario nuevo. */
@@ -27,8 +27,8 @@ export class CommentsApi {
 
   private apiUrl = `${API_BASE}/comments`;
 
-  private readonly selectedPostId = signal<number | undefined>(undefined);
-  private readonly optimisticCommentsByPost = signal<Record<number, Comment[]>>({});
+  private readonly selectedPostId = signal<string | undefined>(undefined);
+  private readonly optimisticCommentsByPost = signal<Record<string, Comment[]>>({});
 
   private readonly commentsResource = httpResource<RawComment[]>(() => {
     const postId = this.selectedPostId();
@@ -37,20 +37,15 @@ export class CommentsApi {
 
   // Mapa de usuarios por ID para resolver el autor de cada comentario
   private readonly userMap = computed(() => {
-    const map = new Map<number, User>();
+    const map = new Map<string, User>();
     for (const user of this.usersApi.users()) {
-      map.set(Number(user.id), user);
+      map.set(user.id, user);
     }
     return map;
   });
 
   private normalizeComment(comment: RawComment): Comment {
-    return {
-      ...comment,
-      id: Number(comment.id),
-      postId: Number(comment.postId),
-      userId: Number(comment.userId),
-    };
+    return { ...comment };
   }
 
   /** Comentarios del post seleccionado, ordenados del más antiguo al más reciente. */
@@ -79,7 +74,7 @@ export class CommentsApi {
    * Carga los comentarios de un post específico.
    * @param postId - ID del post cuyos comentarios se quieren cargar
    */
-  loadComments(postId: number): void {
+  loadComments(postId: string): void {
     this.selectedPostId.set(postId);
   }
 
@@ -88,11 +83,7 @@ export class CommentsApi {
    * @param payload - Datos del comentario a crear
    */
   async addComment(payload: CreateCommentPayload): Promise<Comment> {
-    const normalizedPayload = {
-      ...payload,
-      postId: Number(payload.postId),
-      userId: Number(payload.userId),
-    };
+    const normalizedPayload = { ...payload };
 
     const rawComment = await firstValueFrom(
       this.http.post<RawComment>(this.apiUrl, {
