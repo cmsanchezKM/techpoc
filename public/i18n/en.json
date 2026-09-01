@@ -93,5 +93,20 @@
     "languageSelector": "Language selector",
     "logout": "Exit",
     "login": "Log in"
+  },
+  "errors": {
+    "forbidden": {
+      "title": "Access denied",
+      "message": "You don't have permission to access this resource."
+    },
+    "notFound": {
+      "title": "Page not found",
+      "message": "The resource you are looking for doesn't exist or was removed."
+    },
+    "serverError": {
+      "title": "Server error",
+      "message": "An unexpected error occurred. Please try again later."
+    },
+    "backHome": "Back to home"
   }
 }

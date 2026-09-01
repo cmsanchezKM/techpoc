@@ -27,9 +27,10 @@ export class PostsApi {
   private readonly selectedPostId = signal<string | undefined>(undefined);
 
   private readonly postsResource = httpResource<Post[]>(() => this.apiUrl);
-  private readonly postByIdResource = httpResource<Post>(
-    () => `${this.apiUrl}/${this.selectedPostId()}`,
-  );
+  private readonly postByIdResource = httpResource<Post>(() => {
+    const id = this.selectedPostId();
+    return id ? `${this.apiUrl}/${id}` : undefined;
+  });
 
   // Mapa de usuarios por ID para resolver el autor de cada post
   private readonly userMap = computed(() => {

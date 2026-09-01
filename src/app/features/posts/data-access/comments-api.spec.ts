@@ -39,19 +39,19 @@ describe('CommentsApi', () => {
     httpMock.verify();
   });
 
-  it('debe convertir postId y userId a number antes de persistir', async () => {
-    const payload = {
+  it('envía postId y userId como string al persistir', async () => {
+    const payload: CreateCommentPayload = {
       postId: '10',
       userId: '2',
       body: 'Comentario de prueba',
-    } as unknown as CreateCommentPayload;
+    };
 
     const addPromise = service.addComment(payload);
 
     const req = httpMock.expectOne('http://localhost:3000/comments');
     expect(req.request.method).toBe('POST');
-    expect(req.request.body.postId).toBe(10);
-    expect(req.request.body.userId).toBe(2);
+    expect(req.request.body.postId).toBe('10');
+    expect(req.request.body.userId).toBe('2');
 
     req.flush({
       id: '999',
@@ -64,12 +64,12 @@ describe('CommentsApi', () => {
     await addPromise;
   });
 
-  it('debe devolver el comentario con IDs numéricos aunque la API responda string', async () => {
-    const payload = {
-      postId: 7,
-      userId: 2,
+  it('devuelve el comentario creado con los IDs como string', async () => {
+    const payload: CreateCommentPayload = {
+      postId: '7',
+      userId: '2',
       body: 'Otro comentario',
-    } satisfies CreateCommentPayload;
+    };
 
     const addPromise = service.addComment(payload);
 
@@ -83,8 +83,8 @@ describe('CommentsApi', () => {
     });
 
     const created = await addPromise;
-    expect(created.id).toBe(321);
-    expect(created.postId).toBe(7);
-    expect(created.userId).toBe(2);
+    expect(created.id).toBe('321');
+    expect(created.postId).toBe('7');
+    expect(created.userId).toBe('2');
   });
 });

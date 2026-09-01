@@ -16,7 +16,7 @@ export class PostComments {
   protected commentsApi = inject(CommentsApi);
   protected authService = inject(AuthService);
 
-  readonly postId = input.required<string | number>();
+  readonly postId = input.required<string>();
 
   readonly newCommentBody = signal('');
   readonly isSubmitting = signal(false);
@@ -24,7 +24,7 @@ export class PostComments {
   constructor() {
     // Recarga los comentarios cada vez que cambia el post mostrado.
     effect(() => {
-      this.commentsApi.loadComments(Number(this.postId()));
+      this.commentsApi.loadComments(this.postId());
     });
   }
 
@@ -40,9 +40,9 @@ export class PostComments {
       return;
     }
 
-    const postId = Number(this.postId());
-    const userId = Number(user.id);
-    if (!Number.isFinite(postId) || !Number.isFinite(userId)) {
+    const postId = this.postId();
+    const userId = user.id;
+    if (!postId || !userId) {
       return;
     }
 

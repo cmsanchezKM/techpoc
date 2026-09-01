@@ -1,0 +1,24 @@
+<div class="min-h-[70vh] flex items-center justify-center px-4 py-12">
+  <div class="text-center max-w-md">
+    <div
+      class="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-red-50 text-red-600"
+    >
+      <app-icon [name]="content().icon" class="h-8 w-8" stroke-width="1.5" />
+    </div>
+
+    <p class="text-sm font-semibold text-brand-accent">{{ code() }}</p>
+    <h1 class="mt-2 text-2xl font-bold text-brand-title">
+      {{ 'errors.' + content().key + '.title' | transloco }}
+    </h1>
+    <p class="mt-3 text-brand-body">
+      {{ 'errors.' + content().key + '.message' | transloco }}
+    </p>
+
+    <a
+      routerLink="/"
+      class="mt-8 inline-flex items-center gap-2 rounded-md bg-brand-accent px-5 py-2.5 text-sm font-medium text-white transition hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
+    >
+      {{ 'errors.backHome' | transloco }}
+    </a>
+  </div>
+</div>

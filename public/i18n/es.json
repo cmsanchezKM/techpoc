@@ -93,5 +93,20 @@
     "languageSelector": "Selector de idioma",
     "logout": "Salir",
     "login": "Iniciar sesión"
+  },
+  "errors": {
+    "forbidden": {
+      "title": "Acceso denegado",
+      "message": "No tienes permiso para acceder a este recurso."
+    },
+    "notFound": {
+      "title": "Página no encontrada",
+      "message": "El recurso que buscas no existe o fue eliminado."
+    },
+    "serverError": {
+      "title": "Error del servidor",
+      "message": "Ha ocurrido un error inesperado. Inténtalo de nuevo más tarde."
+    },
+    "backHome": "Volver al inicio"
   }
 }
