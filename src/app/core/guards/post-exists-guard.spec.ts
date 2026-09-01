@@ -33,6 +33,13 @@ describe('postExistsGuard', () => {
     ) as Observable<unknown>;
   }
 
+  function runGuardWithoutId() {
+    const route = { paramMap: convertToParamMap({}) } as unknown as ActivatedRouteSnapshot;
+    return TestBed.runInInjectionContext(() =>
+      postExistsGuard(route, {} as RouterStateSnapshot),
+    ) as Observable<unknown>;
+  }
+
   it('allows access when the post exists', async () => {
     const result = runGuard('42');
     const valuePromise = new Promise((resolve) => result.subscribe(resolve));
@@ -52,6 +59,16 @@ describe('postExistsGuard', () => {
 
     const router = TestBed.inject(Router);
     const value = await valuePromise;
+    expect((value as { toString(): string }).toString()).toBe(
+      router.parseUrl('/not-found').toString(),
+    );
+  });
+
+  it('redirects to /not-found without hitting the API when the route has no id', async () => {
+    const result = runGuardWithoutId();
+    const value = await new Promise((resolve) => result.subscribe(resolve));
+
+    const router = TestBed.inject(Router);
     expect((value as { toString(): string }).toString()).toBe(
       router.parseUrl('/not-found').toString(),
     );

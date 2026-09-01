@@ -22,7 +22,15 @@ describe('CommentsApi', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [CommentsApi, UsersApi, provideHttpClient(), provideHttpClientTesting()],
+      providers: [
+        CommentsApi,
+        // Mock plano: la clase real dispara su propio httpResource de
+        // /users en cualquier `TestBed.tick()`, dejando una petición sin
+        // responder en los tests que sí necesitan tick() para su resource.
+        { provide: UsersApi, useValue: {} },
+        provideHttpClient(),
+        provideHttpClientTesting(),
+      ],
     });
 
     service = TestBed.inject(CommentsApi);
@@ -86,5 +94,80 @@ describe('CommentsApi', () => {
     expect(created.id).toBe('321');
     expect(created.postId).toBe('7');
     expect(created.userId).toBe('2');
+  });
+
+  it('carga y ordena los comentarios del post seleccionado del más antiguo al más reciente', async () => {
+    service.loadComments('10');
+    TestBed.tick();
+
+    httpMock.expectOne('http://localhost:3000/comments?postId=10').flush([
+      {
+        id: '2',
+        postId: '10',
+        userId: '2',
+        body: 'Segundo',
+        createdAt: '2026-01-02T00:00:00.000Z',
+      },
+      {
+        id: '1',
+        postId: '10',
+        userId: '2',
+        body: 'Primero',
+        createdAt: '2026-01-01T00:00:00.000Z',
+      },
+    ]);
+    await Promise.resolve();
+    TestBed.tick();
+
+    const comments = service.comments();
+    expect(comments.map((c) => c.id)).toEqual(['1', '2']);
+    expect(comments[0].author?.name).toBe('bruno');
+  });
+
+  it('no expone comentarios de otro post tras cambiar la selección', async () => {
+    service.loadComments('10');
+    TestBed.tick();
+    httpMock.expectOne('http://localhost:3000/comments?postId=10').flush([]);
+    await Promise.resolve();
+    TestBed.tick();
+
+    expect(service.comments()).toEqual([]);
+  });
+
+  it('combina los comentarios optimistas con los del servidor sin duplicarlos', async () => {
+    service.loadComments('10');
+    TestBed.tick();
+    httpMock.expectOne('http://localhost:3000/comments?postId=10').flush([]);
+    await Promise.resolve();
+    TestBed.tick();
+
+    const addPromise = service.addComment({ postId: '10', userId: '2', body: 'Nuevo comentario' });
+    httpMock.expectOne('http://localhost:3000/comments').flush({
+      id: '55',
+      postId: '10',
+      userId: '2',
+      body: 'Nuevo comentario',
+      createdAt: '2026-01-03T00:00:00.000Z',
+    });
+    await addPromise;
+
+    // addComment recarga el resource: se responde con el mismo comentario
+    // ya persistido para comprobar que no queda duplicado.
+    TestBed.tick();
+    httpMock.expectOne('http://localhost:3000/comments?postId=10').flush([
+      {
+        id: '55',
+        postId: '10',
+        userId: '2',
+        body: 'Nuevo comentario',
+        createdAt: '2026-01-03T00:00:00.000Z',
+      },
+    ]);
+    await Promise.resolve();
+    TestBed.tick();
+
+    const comments = service.comments();
+    expect(comments).toHaveLength(1);
+    expect(comments[0].id).toBe('55');
   });
 });

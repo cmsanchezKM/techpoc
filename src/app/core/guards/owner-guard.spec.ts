@@ -47,6 +47,13 @@ describe('ownerGuard', () => {
     ) as Observable<unknown>;
   }
 
+  function runGuardWithoutId() {
+    const route = { paramMap: convertToParamMap({}) } as unknown as ActivatedRouteSnapshot;
+    return TestBed.runInInjectionContext(() =>
+      ownerGuard(route, {} as RouterStateSnapshot),
+    ) as Observable<unknown>;
+  }
+
   it('allows access when the post belongs to the current user', async () => {
     TestBed.inject(AuthService);
     const result = runGuard('42');
@@ -85,5 +92,24 @@ describe('ownerGuard', () => {
     expect((value as { toString(): string }).toString()).toBe(
       router.parseUrl('/not-found').toString(),
     );
+  });
+
+  it('redirects to /login without hitting the API when the route has no id', async () => {
+    TestBed.inject(AuthService);
+    const result = runGuardWithoutId();
+    const value = await new Promise((resolve) => result.subscribe(resolve));
+
+    const router = TestBed.inject(Router);
+    expect((value as { toString(): string }).toString()).toBe(router.parseUrl('/login').toString());
+  });
+
+  it('redirects to /login without hitting the API when there is no authenticated user', async () => {
+    localStorage.clear();
+    TestBed.inject(AuthService);
+    const result = runGuard('42');
+    const value = await new Promise((resolve) => result.subscribe(resolve));
+
+    const router = TestBed.inject(Router);
+    expect((value as { toString(): string }).toString()).toBe(router.parseUrl('/login').toString());
   });
 });

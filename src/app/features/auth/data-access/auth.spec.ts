@@ -4,7 +4,7 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { AuthService } from './auth.service';
 import { UsersApi } from '@features/users/data-access/users-api';
 import { User } from '@core/models/user.model';
-import { signal } from '@angular/core';
+import { PLATFORM_ID, signal } from '@angular/core';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -131,5 +131,66 @@ describe('AuthService', () => {
 
     expect(result.token).toBe('mock-jwt-token-1234567890');
     expect(service.currentUser()?.name).toBe('John Doe');
+  });
+
+  it('should reject login after the retry budget is exhausted if users never load', async () => {
+    vi.useFakeTimers();
+    try {
+      // Simula que UsersApi nunca resuelve la lista de usuarios.
+      Object.defineProperty(usersApi, 'users', {
+        get: () => signal([]),
+        configurable: true,
+      });
+
+      const loginPromise = service.login({ username: 'John Doe', password: 'John Doe' });
+      const assertion = expect(loginPromise).rejects.toThrow(
+        'Tiempo de espera agotado al cargar el usuario',
+      );
+
+      await vi.advanceTimersByTimeAsync(50 * 100);
+
+      await assertion;
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  describe('en el servidor (SSR)', () => {
+    beforeEach(() => {
+      localStorage.clear();
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        providers: [
+          AuthService,
+          UsersApi,
+          provideHttpClient(),
+          provideHttpClientTesting(),
+          { provide: PLATFORM_ID, useValue: 'server' },
+        ],
+      });
+      service = TestBed.inject(AuthService);
+    });
+
+    it('no lee el token ni el usuario de localStorage', () => {
+      localStorage.setItem('auth_token', 'token-persistido');
+      localStorage.setItem('auth_user', JSON.stringify({ id: '1', name: 'X' }));
+
+      expect(service.token()).toBeNull();
+      expect(service.currentUser()).toBeNull();
+    });
+
+    it('no persiste el token ni el usuario en localStorage tras el login', async () => {
+      usersApi = TestBed.inject(UsersApi);
+      Object.defineProperty(usersApi, 'users', {
+        get: () => signal(mockUsers),
+        configurable: true,
+      });
+
+      await service.login({ username: 'John Doe', password: 'John Doe' });
+
+      expect(service.isAuthenticated()).toBe(true);
+      expect(localStorage.getItem('auth_token')).toBeNull();
+      expect(localStorage.getItem('auth_user')).toBeNull();
+    });
   });
 });
