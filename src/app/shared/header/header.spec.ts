@@ -1,78 +1,104 @@
 import { render, screen } from '@testing-library/angular';
-import { provideRouter, Router } from '@angular/router';
+import { provideRouter } from '@angular/router';
 import { provideTransloco, TranslocoLoader } from '@jsverse/transloco';
-import { signal } from '@angular/core';
 import { of } from 'rxjs';
 import { HeaderComponent } from './header';
-import { LanguageService } from '@core/services/language.service';
-import { AuthService } from '@features/auth/data-access/auth.service';
-import { PostFilters } from '@features/posts/data-access/post-filters';
 
 class TranslocoLoaderMock implements TranslocoLoader {
   getTranslation() {
     return of({
-      header: { logout: 'Salir', login: 'Entrar', languageSelector: 'Idioma' },
-      posts: { list: { placeholder: 'Buscar', search: 'Buscar' } },
+      header: {
+        title: 'TechPoC',
+        logout: 'Salir',
+        login: 'Entrar',
+        languageSelector: 'Idioma',
+        es: 'ES',
+        en: 'EN',
+      },
     });
   }
 }
 
-async function setup(isAuthenticated = false) {
-  const languageServiceMock = { current: signal('es'), use: vi.fn() };
-  const authServiceMock = { isAuthenticated: signal(isAuthenticated), logout: vi.fn() };
-  const postFiltersMock = { searchTerm: signal(''), setSearchTerm: vi.fn() };
-
-  const result = await render(HeaderComponent, {
+async function setup(overrides: Partial<{ showSearch: boolean; isAuthenticated: boolean }> = {}) {
+  return render(HeaderComponent, {
+    componentInputs: {
+      showSearch: false,
+      searchValue: '',
+      searchPlaceholder: 'Buscar',
+      searchAriaLabel: 'Buscar',
+      currentLang: 'es',
+      isAuthenticated: false,
+      ...overrides,
+    },
     providers: [
       provideRouter([]),
       provideTransloco({
         config: { availableLangs: ['es', 'en'], defaultLang: 'es' },
         loader: TranslocoLoaderMock,
       }),
-      { provide: LanguageService, useValue: languageServiceMock },
-      { provide: AuthService, useValue: authServiceMock },
-      { provide: PostFilters, useValue: postFiltersMock },
     ],
   });
-
-  const navigateSpy = vi.spyOn(result.fixture.debugElement.injector.get(Router), 'navigate');
-
-  return { ...result, languageServiceMock, authServiceMock, postFiltersMock, navigateSpy };
 }
 
 describe('HeaderComponent', () => {
-  it('changes the language through LanguageService', async () => {
-    const { languageServiceMock } = await setup();
+  it('renders the brand title', async () => {
+    await setup();
 
-    await screen.getByRole('button', { name: 'EN' }).click();
-
-    expect(languageServiceMock.use).toHaveBeenCalledWith('en');
+    expect(screen.getByText('TechPoC')).toBeInTheDocument();
   });
 
-  it('shows the logout button when authenticated and logs out', async () => {
-    const { authServiceMock, navigateSpy } = await setup(true);
+  it('emits langChange when a language button is clicked', async () => {
+    const { fixture } = await setup();
 
-    screen.getByRole('button', { name: 'Salir' }).click();
+    const emitted: string[] = [];
+    fixture.componentInstance.langChange.subscribe((lang) => emitted.push(lang));
 
-    expect(authServiceMock.logout).toHaveBeenCalled();
-    expect(navigateSpy).toHaveBeenCalledWith(['/login']);
+    screen.getByRole('button', { name: 'EN' }).click();
+
+    expect(emitted).toEqual(['en']);
   });
 
-  it('shows the login button when not authenticated and navigates to /login', async () => {
-    const { navigateSpy } = await setup(false);
+  it('shows the logout button when authenticated', async () => {
+    await setup({ isAuthenticated: true });
 
-    screen.getByRole('button', { name: 'Entrar' }).click();
-
-    expect(navigateSpy).toHaveBeenCalledWith(['/login']);
+    expect(screen.getByRole('button', { name: 'Salir' })).toBeInTheDocument();
   });
 
-  it('forwards the search input to PostFilters', async () => {
-    const { fixture, postFiltersMock } = await setup();
+  it('shows the login button when not authenticated', async () => {
+    await setup({ isAuthenticated: false });
 
-    fixture.componentInstance.onSearchInput({
-      target: { value: 'angular' },
-    } as unknown as Event);
+    expect(screen.getByRole('button', { name: 'Entrar' })).toBeInTheDocument();
+  });
 
-    expect(postFiltersMock.setSearchTerm).toHaveBeenCalledWith('angular');
+  it('only renders the search input when showSearch is true', async () => {
+    const { rerender } = await setup({ showSearch: false });
+
+    expect(screen.queryByPlaceholderText('Buscar')).not.toBeInTheDocument();
+
+    await rerender({
+      componentInputs: {
+        showSearch: true,
+        searchValue: '',
+        searchPlaceholder: 'Buscar',
+        searchAriaLabel: 'Buscar',
+        currentLang: 'es',
+        isAuthenticated: false,
+      },
+    });
+
+    expect(screen.getByPlaceholderText('Buscar')).toBeInTheDocument();
+  });
+
+  it('emits searchChange when typing in the search input', async () => {
+    const { fixture } = await setup({ showSearch: true });
+
+    const emitted: string[] = [];
+    fixture.componentInstance.searchChange.subscribe((value) => emitted.push(value));
+
+    const input = screen.getByPlaceholderText('Buscar') as HTMLInputElement;
+    input.value = 'angular';
+    input.dispatchEvent(new Event('input'));
+
+    expect(emitted).toEqual(['angular']);
   });
 });

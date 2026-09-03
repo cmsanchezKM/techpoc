@@ -1,4 +1,15 @@
-<app-header />
+<app-header
+  [showSearch]="showSearch()"
+  [searchValue]="searchValue()"
+  [searchPlaceholder]="'posts.list.placeholder' | transloco"
+  [searchAriaLabel]="'posts.list.search' | transloco"
+  [currentLang]="currentLang()"
+  [isAuthenticated]="isAuthenticated()"
+  (searchChange)="onSearchChange($event)"
+  (langChange)="onLangChange($event)"
+  (login)="onLogin()"
+  (logout)="onLogout()"
+/>
 
 <main class="max-w-[1200px] mx-auto px-8">
   <router-outlet></router-outlet>

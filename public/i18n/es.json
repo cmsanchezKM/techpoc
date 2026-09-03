@@ -3,7 +3,7 @@
     "list": {
       "title": "Lista de posts",
       "search": "Buscar",
-      "placeholder": "Buscar posts...",
+      "placeholder": "Buscar posts",
       "authors": "Autores",
       "tags": "Etiquetas",
       "loading": "Cargando posts...",
@@ -92,7 +92,10 @@
   "header": {
     "languageSelector": "Selector de idioma",
     "logout": "Salir",
-    "login": "Iniciar sesión"
+    "login": "Iniciar sesión",
+    "es": "ES",
+    "en": "EN",
+    "title": "TechPoC"
   },
   "errors": {
     "forbidden": {
